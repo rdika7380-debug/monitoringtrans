@@ -15,13 +15,15 @@
     background: #020202; font-family: 'Inter', sans-serif; color: #fff;
     overflow-x: hidden; -webkit-font-smoothing: antialiased;
     -webkit-tap-highlight-color: transparent;
+    /* Support notch / dynamic island */
+    padding-top: env(safe-area-inset-top);
+    padding-bottom: env(safe-area-inset-bottom);
   }
   .font-display { font-family: 'Space Grotesk', sans-serif; }
   ::-webkit-scrollbar { width: 0; height: 0; display: none; }
   * { scrollbar-width: none; -ms-overflow-style: none; }
 
-  input[type=number]::-webkit-inner-spin-button,
-  input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type=number]::-webkit-inner-spin-button, input[type=number]::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
   input[type=number] { -moz-appearance: textfield; }
 
   @keyframes float-orb-1 { 0%,100%{transform:translate(0,0) scale(1)} 33%{transform:translate(40px,-30px) scale(1.1)} 66%{transform:translate(-20px,40px) scale(0.95)} }
@@ -30,6 +32,16 @@
   .orb-1 { animation: float-orb-1 18s ease-in-out infinite; }
   .orb-2 { animation: float-orb-2 22s ease-in-out infinite; }
   .orb-3 { animation: float-orb-3 25s ease-in-out infinite; }
+
+  /* Background Grid & Floating Shapes */
+  .grid-bg {
+    background-image: linear-gradient(rgba(178, 213, 229, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(178, 213, 229, 0.03) 1px, transparent 1px);
+    background-size: 40px 40px;
+    mask-image: radial-gradient(circle at 50% 50%, black, transparent 80%);
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, black, transparent 80%);
+  }
+  @keyframes float-square { 0% { transform: translate(0,0) rotate(0deg); } 50% { transform: translate(20px, -30px) rotate(45deg); } 100% { transform: translate(0,0) rotate(90deg); } }
+  .float-sq { animation: float-square 12s linear infinite; }
 
   @keyframes shimmer { 0%{transform:translateX(-150%) skewX(-20deg)} 100%{transform:translateX(250%) skewX(-20deg)} }
   .shimmer-line::before {
@@ -56,7 +68,7 @@
     border: 1px solid rgba(255,255,255,0.08); box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.08), inset 0 -1px 0 0 rgba(0,0,0,0.3), 0 8px 32px rgba(0,0,0,0.4);
   }
   .glass-strong {
-    background: rgba(10,15,20,0.7); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%);
+    background: rgba(10,15,20,0.85); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%);
     border: 1px solid rgba(178,213,229,0.14); box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.12), inset 0 -1px 0 0 rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.6);
   }
   .glass-input { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); transition: all 0.2s; }
@@ -84,10 +96,16 @@
 <div id="app" v-cloak>
   <!-- Background -->
   <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+    <div class="absolute inset-0 grid-bg"></div>
     <div class="absolute inset-0" style="background: radial-gradient(circle at 15% 15%, rgba(178,213,229,0.09), transparent 40%), radial-gradient(circle at 85% 55%, rgba(178,213,229,0.07), transparent 45%), radial-gradient(circle at 50% 95%, rgba(178,213,229,0.05), transparent 50%);"></div>
     <div class="orb-1 absolute top-[-120px] left-[-60px] w-[320px] h-[320px] rounded-full" style="background:#B2D5E5;filter:blur(120px);opacity:0.15;"></div>
     <div class="orb-2 absolute top-[38%] right-[-90px] w-[300px] h-[300px] rounded-full" style="background:#B2D5E5;filter:blur(110px);opacity:0.12;"></div>
     <div class="orb-3 absolute bottom-[-120px] left-[25%] w-[340px] h-[340px] rounded-full" style="background:#B2D5E5;filter:blur(140px);opacity:0.10;"></div>
+    
+    <!-- Floating Squares -->
+    <div class="float-sq absolute top-[20%] left-[10%] w-6 h-6 rounded-md border border-[#B2D5E5]/10"></div>
+    <div class="float-sq absolute top-[60%] right-[15%] w-8 h-8 rounded-md border border-[#B2D5E5]/10" style="animation-delay: 3s;"></div>
+    <div class="float-sq absolute top-[80%] left-[30%] w-4 h-4 rounded-md border border-[#B2D5E5]/10" style="animation-delay: 6s;"></div>
   </div>
 
   <!-- LOGIN SCREEN -->
@@ -118,8 +136,8 @@
   </div>
 
   <!-- MAIN APP -->
-  <div v-else class="relative max-w-md mx-auto min-h-screen px-5 pb-36 pt-10">
-    <header class="mb-6 flex items-center justify-between sticky top-0 z-30 py-2 -mx-5 px-5" style="background: linear-gradient(to bottom, rgba(2,2,2,0.9), transparent);">
+  <div v-else class="relative max-w-md mx-auto min-h-screen px-5 pb-36">
+    <header class="mb-6 flex items-center justify-between sticky top-0 z-30 py-2 -mx-5 px-5" style="background: linear-gradient(to bottom, rgba(2,2,2,0.95), transparent);">
       <div class="flex items-center gap-3">
         <div class="relative">
           <div class="w-11 h-11 rounded-2xl glass flex items-center justify-center overflow-hidden p-1.5">
@@ -291,10 +309,11 @@
           <input v-model="searchResult" type="text" placeholder="Cari kode, rak, atau hasil..." class="bg-transparent flex-1 text-sm placeholder:text-white/30 outline-none">
         </div>
         <div class="space-y-3">
-          <div v-for="(item, i) in paginatedResult" :key="item.id" class="card-in glass rounded-2xl p-4 active:scale-[0.98] transition-transform" :style="`animation-delay:${i*0.05}s`">
+          <div v-for="(item, i) in paginatedResult" :key="item.id" @click="openResultDetail(item)" class="card-in glass rounded-2xl p-4 active:scale-[0.98] transition-transform cursor-pointer" :style="`animation-delay:${i*0.05}s`">
             <div class="flex items-start gap-3">
-              <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" :class="item.status==='pass' ? 'bg-emerald-400/10 text-emerald-300' : item.status==='pending' ? 'bg-amber-400/10 text-amber-300' : 'bg-rose-400/10 text-rose-300'">
-                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+              <img v-if="item.foto" :src="item.foto" class="w-12 h-12 rounded-xl object-cover flex-shrink-0" alt="Foto">
+              <div v-else class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" :class="item.status==='pass' ? 'bg-emerald-400/10 text-emerald-300' : item.status==='pending' ? 'bg-amber-400/10 text-amber-300' : 'bg-rose-400/10 text-rose-300'">
+                <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z" /></svg>
               </div>
               <div class="flex-1 min-w-0">
                 <div class="flex items-center justify-between gap-2 mb-2">
@@ -377,10 +396,10 @@
 
   <nav v-if="isLoggedIn" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md safe-bottom px-4 pb-4 z-50">
     <div class="glass-strong rounded-3xl px-2 py-2 flex items-center justify-between relative">
-      <button v-for="(tab, i) in tabs" :key="tab.name" @click="activeTab = i" class="relative flex flex-col items-center justify-center gap-1 flex-1 py-2.5 active:scale-90 transition-all duration-300 no-select">
+      <button v-for="i in visibleTabs" :key="i" @click="activeTab = i" class="relative flex flex-col items-center justify-center gap-1 flex-1 py-2.5 active:scale-90 transition-all duration-300 no-select">
         <div v-if="activeTab === i" class="absolute top-0 left-1/2 -translate-x-1/2 w-7 h-[2px] rounded-full bg-[#B2D5E5]" style="box-shadow:0 0 10px rgba(178,213,229,0.6);"></div>
-        <svg class="w-[20px] h-[20px] transition-all duration-300" :class="activeTab === i ? 'text-[#B2D5E5]' : 'text-white/35'" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" v-html="tab.icon"></svg>
-        <span class="text-[9px] font-medium transition-all duration-300 font-display tracking-wide" :class="activeTab === i ? 'text-[#B2D5E5]' : 'text-white/35'">{{ tab.name }}</span>
+        <svg class="w-[20px] h-[20px] transition-all duration-300" :class="activeTab === i ? 'text-[#B2D5E5]' : 'text-white/35'" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" v-html="tabs[i].icon"></svg>
+        <span class="text-[9px] font-medium transition-all duration-300 font-display tracking-wide" :class="activeTab === i ? 'text-[#B2D5E5]' : 'text-white/35'">{{ tabs[i].name }}</span>
       </button>
     </div>
   </nav>
@@ -388,13 +407,14 @@
   <!-- MODAL FORM -->
   <transition name="modal">
     <div v-if="showForm" class="fixed inset-0 z-[100] flex items-end justify-center">
-      <div @click="closeForm" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-      <div class="relative w-full max-w-md glass-strong rounded-t-3xl max-h-[92vh] overflow-y-auto slide-up pb-10">
-        <div class="sticky top-0 z-10 glass-strong rounded-t-3xl pb-3 pt-3 px-5 mb-4" style="background: linear-gradient(to bottom, rgba(10,15,20,0.95) 60%, rgba(10,15,20,0.5) 80%, transparent 100%);">
-          <div class="w-10 h-1 bg-white/20 rounded-full mx-auto mb-3"></div>
+      <div @click="closeForm" class="absolute inset-0 bg-black/70 backdrop-blur-md"></div>
+      <div class="relative w-full max-w-md glass-strong rounded-t-3xl max-h-[92vh] overflow-y-auto slide-up pb-10" style="box-shadow: 0 -10px 40px rgba(0,0,0,0.5); transform: translateY(${sheetTranslate}px);" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">
+        <div class="sticky top-0 z-10 glass-strong rounded-t-3xl pb-3 pt-3 px-5 mb-4" style="background: linear-gradient(to bottom, rgba(10,15,20,0.98) 60%, rgba(10,15,20,0.8) 80%, transparent 100%);">
+          <div class="w-12 h-1.5 bg-[#B2D5E5]/30 rounded-full mx-auto mb-3 cursor-grab"></div>
+          <p class="text-center text-[9px] uppercase tracking-widest text-white/30 mb-3">Geser ke bawah untuk menutup</p>
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-[10px] uppercase tracking-[0.18em] text-white/40">Form Monitoring</p>
+              <p class="text-[10px] uppercase tracking-[0.18em] text-[#B2D5E5]">Form Monitoring</p>
               <h2 class="font-display text-lg font-bold">Input Data {{ activeTab === 2 ? 'Packaging' : 'Tanaman' }}</h2>
             </div>
             <button @click="closeForm" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center active:scale-90 transition-transform no-select">
@@ -404,11 +424,11 @@
         </div>
         <div class="px-5 space-y-5">
           <div class="grid grid-cols-2 gap-3">
-            <div class="glass rounded-2xl p-3.5">
+            <div class="glass rounded-2xl p-3.5 border border-white/5">
               <p class="text-[9px] uppercase tracking-wider text-white/40 mb-1">{{ activeTab === 2 ? 'Kode Kebun' : 'Kode Project' }}</p>
               <p class="font-display text-sm font-semibold text-[#B2D5E5]">{{ formData.kode }}</p>
             </div>
-            <div class="glass rounded-2xl p-3.5">
+            <div class="glass rounded-2xl p-3.5 border border-white/5">
               <p class="text-[9px] uppercase tracking-wider text-white/40 mb-1">{{ activeTab === 2 ? 'Rak Botol' : 'Periode' }}</p>
               <p class="font-display text-sm font-semibold text-white">{{ activeTab === 2 ? formData.rakBotol : formData.periode }}</p>
             </div>
@@ -446,10 +466,6 @@
                 <span v-if="autoKeterangan">{{ autoKeterangan }}</span>
                 <span v-else class="text-white/40">Pilih pertumbuhan & jumlah untuk melihat keterangan</span>
               </div>
-            </div>
-            <div>
-              <label class="text-[10px] uppercase tracking-wider mb-2 block font-display" :class="formErrors.catatan ? 'text-rose-300' : 'text-white/50'">Catatan Monitoring <span class="text-rose-400">*</span></label>
-              <textarea v-model="formData.catatan" rows="3" placeholder="Tulis catatan monitoring..." @input="formErrors.catatan = false" class="w-full glass-input rounded-2xl p-4 text-sm placeholder:text-white/30 outline-none resize-none transition-all" :class="{'error-border': formErrors.catatan}"></textarea>
             </div>
             <div>
               <label class="text-[10px] uppercase tracking-wider mb-2 block font-display" :class="formErrors.status ? 'text-rose-300' : 'text-white/50'">Status <span class="text-rose-400">*</span></label>
@@ -519,10 +535,63 @@
               </div>
             </div>
           </div>
-          <button @click="submitForm" :disabled="isSubmitting" class="w-full bg-[#B2D5E5] text-[#020202] font-display font-bold text-sm py-4 rounded-2xl active:scale-95 transition-all duration-300 no-select mt-4 flex items-center justify-center gap-2" style="box-shadow: 0 0 25px rgba(178,213,229,0.3);">
-            <span v-if="!isSubmitting">Simpan Data Monitoring</span>
-            <div v-else class="w-5 h-5 border-2 border-[#020202]/30 border-t-[#020202] rounded-full animate-spin"></div>
+          <button @click="submitForm" class="w-full bg-[#B2D5E5] text-[#020202] font-display font-bold text-sm py-4 rounded-2xl active:scale-95 transition-all duration-300 no-select mt-4 flex items-center justify-center gap-2" style="box-shadow: 0 0 25px rgba(178,213,229,0.3);">
+            <span>Simpan Data Monitoring</span>
           </button>
+        </div>
+      </div>
+    </div>
+  </transition>
+
+  <!-- MODAL RESULT DETAIL -->
+  <transition name="modal">
+    <div v-if="showResultModal" class="fixed inset-0 z-[100] flex items-end justify-center">
+      <div @click="showResultModal = false" class="absolute inset-0 bg-black/70 backdrop-blur-md"></div>
+      <div class="relative w-full max-w-md glass-strong rounded-t-3xl max-h-[85vh] overflow-y-auto slide-up pb-10" style="box-shadow: 0 -10px 40px rgba(0,0,0,0.5);" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">
+        <div class="sticky top-0 z-10 glass-strong rounded-t-3xl pb-3 pt-3 px-5 mb-4" style="background: linear-gradient(to bottom, rgba(10,15,20,0.98) 60%, rgba(10,15,20,0.8) 80%, transparent 100%);">
+          <div class="w-12 h-1.5 bg-[#B2D5E5]/30 rounded-full mx-auto mb-3 cursor-grab"></div>
+          <p class="text-center text-[9px] uppercase tracking-widest text-white/30 mb-3">Geser ke bawah untuk menutup</p>
+          <div class="flex items-center justify-between">
+            <div>
+              <p class="text-[10px] uppercase tracking-[0.18em] text-[#B2D5E5]">Detail Hasil Monitor</p>
+              <h2 class="font-display text-lg font-bold truncate">{{ resultDetailData.kode }}</h2>
+            </div>
+            <button @click="showResultModal = false" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center active:scale-90 transition-transform no-select">
+              <svg class="w-4 h-4 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+            </button>
+          </div>
+        </div>
+        <div class="px-5 space-y-4">
+          <div v-if="resultDetailData.foto" class="relative rounded-2xl overflow-hidden h-60 bg-black/20">
+            <img :src="resultDetailData.foto" class="w-full h-full object-cover" alt="Foto Hasil">
+            <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
+          </div>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="glass rounded-2xl p-3.5 border border-white/5">
+              <p class="text-[9px] uppercase tracking-wider text-white/40 mb-1">Kode Project</p>
+              <p class="font-display text-sm font-semibold text-white">{{ resultDetailData.kode }}</p>
+            </div>
+            <div class="glass rounded-2xl p-3.5 border border-white/5">
+              <p class="text-[9px] uppercase tracking-wider text-white/40 mb-1">Periode</p>
+              <p class="font-display text-sm font-semibold text-white">{{ resultDetailData.periode }}</p>
+            </div>
+            <div class="glass rounded-2xl p-3.5 border border-white/5">
+              <p class="text-[9px] uppercase tracking-wider text-white/40 mb-1">Rak</p>
+              <p class="font-display text-sm font-semibold text-[#B2D5E5]">{{ resultDetailData.rak }}</p>
+            </div>
+            <div class="glass rounded-2xl p-3.5 border border-white/5">
+              <p class="text-[9px] uppercase tracking-wider text-white/40 mb-1">Status</p>
+              <p class="font-display text-sm font-semibold" :class="resultDetailData.status==='pass' ? 'text-emerald-300' : resultDetailData.status==='pending' ? 'text-amber-300' : 'text-rose-300'">{{ resultDetailData.hasil }}</p>
+            </div>
+          </div>
+          <div class="glass rounded-2xl p-4 border border-white/5">
+            <p class="text-[9px] uppercase tracking-wider text-white/40 mb-1">Silangan</p>
+            <p class="text-sm text-white/80 font-medium">{{ resultDetailData.silangan || '-' }}</p>
+          </div>
+          <div class="glass rounded-2xl p-4 border border-white/5">
+            <p class="text-[9px] uppercase tracking-wider text-white/40 mb-1">Kelompok</p>
+            <p class="text-sm text-white/80 font-medium">{{ resultDetailData.kelompok || '-' }}</p>
+          </div>
         </div>
       </div>
     </div>
@@ -531,18 +600,19 @@
   <!-- MODAL ACTIVITY -->
   <transition name="modal">
     <div v-if="showActivityModal" class="fixed inset-0 z-[100] flex items-end justify-center">
-      <div @click="showActivityModal = false" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
-      <div class="relative w-full max-w-md glass-strong rounded-t-3xl max-h-[80vh] overflow-y-auto slide-up pb-10">
-        <div class="sticky top-0 z-10 glass-strong rounded-t-3xl pb-3 pt-3 px-5 mb-4" style="background: linear-gradient(to bottom, rgba(10,15,20,0.95) 60%, rgba(10,15,20,0.5) 80%, transparent 100%);">
-          <div class="w-10 h-1 bg-white/20 rounded-full mx-auto mb-3"></div>
+      <div @click="showActivityModal = false" class="absolute inset-0 bg-black/70 backdrop-blur-md"></div>
+      <div class="relative w-full max-w-md glass-strong rounded-t-3xl max-h-[80vh] overflow-y-auto slide-up pb-10" style="box-shadow: 0 -10px 40px rgba(0,0,0,0.5);" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">
+        <div class="sticky top-0 z-10 glass-strong rounded-t-3xl pb-3 pt-3 px-5 mb-4" style="background: linear-gradient(to bottom, rgba(10,15,20,0.98) 60%, rgba(10,15,20,0.8) 80%, transparent 100%);">
+          <div class="w-12 h-1.5 bg-[#B2D5E5]/30 rounded-full mx-auto mb-3 cursor-grab"></div>
+          <p class="text-center text-[9px] uppercase tracking-widest text-white/30 mb-3">Geser ke bawah untuk menutup</p>
           <div class="flex items-center justify-between">
-            <div><p class="text-[10px] uppercase tracking-[0.18em] text-white/40">Riwayat</p><h2 class="font-display text-lg font-bold">Aktivitas Terbaru</h2></div>
+            <div><p class="text-[10px] uppercase tracking-[0.18em] text-[#B2D5E5]">Riwayat</p><h2 class="font-display text-lg font-bold">Aktivitas Terbaru</h2></div>
             <button @click="showActivityModal = false" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center active:scale-90 transition-transform no-select"><svg class="w-4 h-4 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button>
           </div>
         </div>
         <div class="px-5 space-y-3">
           <div v-if="activities.length === 0" class="py-10 text-center"><p class="text-sm text-white/40">Belum ada aktivitas terbaru</p></div>
-          <div v-for="(act, i) in activities" :key="i" class="glass rounded-2xl p-4 flex items-start gap-3">
+          <div v-for="(act, i) in activities" :key="i" class="glass rounded-2xl p-4 flex items-start gap-3 border border-white/5">
             <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" :class="act.status === 'BERHASIL' ? 'bg-emerald-400/10 text-emerald-300' : act.status === 'PENDING' ? 'bg-amber-400/10 text-amber-300' : 'bg-rose-400/10 text-rose-300'"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
             <div class="flex-1 min-w-0">
               <div class="flex items-center justify-between gap-2">
@@ -578,8 +648,7 @@
   const { createApp, ref, computed } = Vue;
   const app = createApp({
     setup() {
-      // GANTI URL INI DENGAN WEB APP URL GOOGLE SCRIPT ANDA
-      const API_URL = 'https://script.google.com/macros/s/AKfycbxLrFlu7WzEzdD33zolptblrBsHkAe-OFcALsk_NcyvJnkBsJxDy4viSzoFl4qP2k4z3A/exec'; 
+      const API_URL = 'https://script.google.com/macros/s/AKfycbxGq3w-0J8Y7xY9zZ5v/exec'; // GANTI INI
       
       const isLoggedIn = ref(false);
       const isLoggingIn = ref(false);
@@ -588,9 +657,9 @@
       const activeTab = ref(0);
       const search1 = ref(''); const search2 = ref(''); const search3 = ref(''); const searchResult = ref('');
       const showActivityModal = ref(false);
+      const showResultModal = ref(false);
       
       const profileData = ref({ nama: "", jabatan: "", username: "", tab: "" });
-      const showPassword = ref(false);
       
       const displayCount1 = ref(5); const displayCount2 = ref(5); const displayCount3 = ref(5); const displayCountResult = ref(5);
       const isLoading1 = ref(false); const isLoading2 = ref(false); const isLoading3 = ref(false); const isLoadingResult = ref(false);
@@ -603,6 +672,17 @@
         { name: 'PROFILE', icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />' }
       ];
 
+      const visibleTabs = computed(() => {
+        let arr = [];
+        const access = profileData.value.tab || '';
+        if (access.includes('T1')) arr.push(0);
+        if (access.includes('T2')) arr.push(1);
+        if (access.includes('T3')) arr.push(2);
+        arr.push(3); // RESULT
+        arr.push(4); // PROFILE
+        return arr;
+      });
+
       const currentView = computed(() => {
         const views = [
           { title: 'Transaksi Tahap 1' }, { title: 'Transaksi Tahap 2' }, { title: 'Transaksi Tahap 3' }, { title: 'Hasil Monitor' }, { title: 'Profil Saya' },
@@ -612,26 +692,10 @@
 
       const trans1 = ref([]); const trans2 = ref([]); const trans3 = ref([]); const resultData = ref([]);
 
-      const filteredTrans1 = computed(() => {
-        if (!search1.value) return trans1.value;
-        const q = search1.value.toLowerCase();
-        return trans1.value.filter(i => i.kode.toLowerCase().includes(q) || i.rak.toLowerCase().includes(q));
-      });
-      const filteredTrans2 = computed(() => {
-        if (!search2.value) return trans2.value;
-        const q = search2.value.toLowerCase();
-        return trans2.value.filter(i => i.kode.toLowerCase().includes(q) || i.rak.toLowerCase().includes(q));
-      });
-      const filteredTrans3 = computed(() => {
-        if (!search3.value) return trans3.value;
-        const q = search3.value.toLowerCase();
-        return trans3.value.filter(i => i.kode.toLowerCase().includes(q) || i.rakBotol.toLowerCase().includes(q));
-      });
-      const filteredResult = computed(() => {
-        if (!searchResult.value) return resultData.value;
-        const q = searchResult.value.toLowerCase();
-        return resultData.value.filter(i => i.kode.toLowerCase().includes(q) || i.rak.toLowerCase().includes(q) || i.hasil.toLowerCase().includes(q));
-      });
+      const filteredTrans1 = computed(() => { if (!search1.value) return trans1.value; const q = search1.value.toLowerCase(); return trans1.value.filter(i => i.kode.toLowerCase().includes(q) || i.rak.toLowerCase().includes(q)); });
+      const filteredTrans2 = computed(() => { if (!search2.value) return trans2.value; const q = search2.value.toLowerCase(); return trans2.value.filter(i => i.kode.toLowerCase().includes(q) || i.rak.toLowerCase().includes(q)); });
+      const filteredTrans3 = computed(() => { if (!search3.value) return trans3.value; const q = search3.value.toLowerCase(); return trans3.value.filter(i => i.kode.toLowerCase().includes(q) || i.rakBotol.toLowerCase().includes(q)); });
+      const filteredResult = computed(() => { if (!searchResult.value) return resultData.value; const q = searchResult.value.toLowerCase(); return resultData.value.filter(i => i.kode.toLowerCase().includes(q) || i.rak.toLowerCase().includes(q) || i.hasil.toLowerCase().includes(q)); });
 
       const paginatedTrans1 = computed(() => filteredTrans1.value.slice(0, displayCount1.value));
       const paginatedTrans2 = computed(() => filteredTrans2.value.slice(0, displayCount2.value));
@@ -647,18 +711,28 @@
 
       const showForm = ref(false); const dropdownOpen = ref(false); const fotoPreview = ref(null); const fileInput = ref(null);
       const fadingOutId = ref(null); const showToast = ref(false); const toastType = ref('success'); const toastTitle = ref(''); const toastMessage = ref('');
-      const formErrors = ref({}); const activities = ref([]); const isSubmitting = ref(false);
+      const formErrors = ref({}); const activities = ref([]); const resultDetailData = ref({});
       const pertumbuhanOptions = ['Tumbuh Baik', 'Tumbuh Kurang Baik', 'Tidak Tumbuh', 'Abnormal']; const jumlahOptions = ['Sedikit', 'Banyak'];
       const formData = ref({});
+
+      // Swipe to dismiss logic
+      const touchStartY = ref(0); const sheetTranslate = ref(0);
+      const onTouchStart = (e) => { touchStartY.value = e.touches[0].clientY; sheetTranslate.value = 0; };
+      const onTouchMove = (e) => { let diff = e.touches[0].clientY - touchStartY.value; if (diff > 0) sheetTranslate.value = diff; };
+      const onTouchEnd = () => {
+        if (sheetTranslate.value > 100) {
+          if (showForm.value) closeForm();
+          if (showActivityModal.value) showActivityModal.value = false;
+          if (showResultModal.value) showResultModal.value = false;
+        }
+        sheetTranslate.value = 0;
+      };
 
       const fetchAPI = async (action, method = 'GET', payload = null) => {
         let url = `${API_URL}?action=${action}`;
         let options = { method, headers: { 'Content-Type': 'text/plain;charset=utf-8' } };
         if (method === 'POST' && payload) { options.body = JSON.stringify(payload); }
-        try {
-          const res = await fetch(url, options);
-          return await res.json();
-        } catch (e) { return { error: e.toString() }; }
+        try { const res = await fetch(url, options); return await res.json(); } catch (e) { return { error: e.toString() }; }
       };
 
       const handleLogin = async () => {
@@ -670,68 +744,46 @@
         } else {
           profileData.value = { nama: res.nama, jabatan: res.jabatan, username: res.username, tab: res.tab_access };
           isLoggedIn.value = true;
+          activeTab.value = visibleTabs.value[0];
           fetchAllData();
         }
       };
 
       const fetchAllData = async () => {
-        const [monRes, t3Res, resultRes] = await Promise.all([
-          fetchAPI('getMonitoringData'), fetchAPI('getTrans3Data'), fetchAPI('getResultData')
-        ]);
+        const [monRes, t3Res, resultRes] = await Promise.all([ fetchAPI('getMonitoringData'), fetchAPI('getTrans3Data'), fetchAPI('getResultData') ]);
         if (monRes.trans1) trans1.value = monRes.trans1.map((item, i) => ({ id: i+1, ...item }));
         if (monRes.trans2) trans2.value = monRes.trans2.map((item, i) => ({ id: i+1, ...item }));
         if (t3Res.trans3) trans3.value = t3Res.trans3.map((item, i) => ({ id: i+1, tgl: item.tgl, kode: item.kode, jmlBotol: parseInt(item.jumlahBotol) || 0, rakBotol: item.rak }));
         if (resultRes.result) resultData.value = resultRes.result.map((item, i) => {
           let statusClass = "pending"; let statusText = item.status;
-          if (item.status) {
-            let s = item.status.toUpperCase();
-            if (s === "BERHASIL" || s === "LULUS") statusClass = "pass";
-            if (s === "GAGAL") statusClass = "fail";
-          }
-          return { id: i+1, kode: item.kode, periode: item.periode, rak: item.rak, hasil: statusText, status: statusClass, foto: item.foto };
+          if (item.status) { let s = item.status.toUpperCase(); if (s === "BERHASIL" || s === "LULUS") statusClass = "pass"; if (s === "GAGAL") statusClass = "fail"; }
+          return { id: i+1, kode: item.kode, periode: item.periode, rak: item.rak, hasil: statusText, status: statusClass, foto: item.foto, silangan: item.silangan, kelompok: item.kelompok };
         });
       };
 
+      const openResultDetail = (item) => { resultDetailData.value = item; showResultModal.value = true; };
       const openForm = (item) => {
         formErrors.value = {};
-        formData.value = {
-          id: item.id, kode: item.kode, status: '', periode: item.periode || '', pertumbuhan: '', jumlah: '', presentase: 0,
-          keterangan: '', rakBotol: item.rakBotol || '', warnaDaun: '', jmlBotol: item.jmlBotol || 0, catatan: '', rekPembesaran: 0, rekPenjualan: 0,
-        };
+        formData.value = { id: item.id, kode: item.kode, status: '', periode: item.periode || '', pertumbuhan: '', jumlah: '', presentase: 0, keterangan: '', rakBotol: item.rakBotol || '', warnaDaun: '', jmlBotol: item.jmlBotol || 0, catatan: '', rekPembesaran: 0, rekPenjualan: 0 };
         fotoPreview.value = null; dropdownOpen.value = false; showForm.value = true;
       };
       const closeForm = () => { showForm.value = false; };
 
-      const handleFoto = (e) => {
-        const file = e.target.files[0];
-        if (file) { fotoPreview.value = URL.createObjectURL(file); formErrors.value.foto = false; }
-      };
-
-      const triggerToast = (type, title, msg) => {
-        toastType.value = type; toastTitle.value = title; toastMessage.value = msg; showToast.value = true;
-        setTimeout(() => { showToast.value = false; }, 2500);
-      };
-
+      const handleFoto = (e) => { const file = e.target.files[0]; if (file) { fotoPreview.value = URL.createObjectURL(file); formErrors.value.foto = false; } };
+      const triggerToast = (type, title, msg) => { toastType.value = type; toastTitle.value = title; toastMessage.value = msg; showToast.value = true; setTimeout(() => { showToast.value = false; }, 2500); };
       const autoKeterangan = computed(() => {
         if (activeTab.value !== 0 && activeTab.value !== 1) return '';
         if (!formData.value.periode) return '';
         const baseTerm = formData.value.periode === 'T1' ? 'EMBRIO' : 'PLB';
         const t = formData.value.pertumbuhan; const j = formData.value.jumlah;
-        let text = '';
-        if (t) text += `${baseTerm} ${t}`; if (t && j) text += ', '; if (j) text += `JUMLAH ${baseTerm} ${j}`;
+        let text = ''; if (t) text += `${baseTerm} ${t}`; if (t && j) text += ', '; if (j) text += `JUMLAH ${baseTerm} ${j}`;
         return text;
       });
 
       const getBase64 = (file) => {
         return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.readAsDataURL(file);
-          reader.onload = () => {
-            let result = reader.result;
-            let base64 = result.split(',')[1];
-            let mimeType = file.type;
-            resolve({ fileData: base64, mimeType: mimeType });
-          };
+          const reader = new FileReader(); reader.readAsDataURL(file);
+          reader.onload = () => { let result = reader.result; resolve({ fileData: result.split(',')[1], mimeType: file.type }); };
           reader.onerror = error => reject(error);
         });
       };
@@ -745,28 +797,22 @@
         } else if (activeTab.value === 2) {
           if (!formData.value.warnaDaun) { formErrors.value.warnaDaun = true; isValid = false; }
           if (!formData.value.jmlBotol || formData.value.jmlBotol === 0) { formErrors.value.jmlBotol = true; isValid = false; }
+          if (!formData.value.catatan) { formErrors.value.catatan = true; isValid = false; }
         }
-        if (!formData.value.catatan) { formErrors.value.catatan = true; isValid = false; }
         if (!formData.value.status) { formErrors.value.status = true; isValid = false; }
         if (!fotoPreview.value) { formErrors.value.foto = true; isValid = false; }
         return isValid;
       };
 
-      const submitForm = async () => {
+      const submitForm = () => {
         if (!validateForm()) { triggerToast('error', 'Data Belum Lengkap', 'Mohon lengkapi field wajib (*)'); return; }
-        isSubmitting.value = true;
         
-        let payload = { ...formData.value, petugas: profileData.value.username };
+        // 1. Snapshot data for background process
+        const currentId = formData.value.id;
+        const currentList = activeTab.value === 0 ? trans1.value : activeTab.value === 1 ? trans2.value : trans3.value;
+        const petugasName = profileData.value.nama;
+        let payload = { ...formData.value, petugas: petugasName };
         payload.keterangan = autoKeterangan.value;
-        
-        const file = fileInput.value.files[0];
-        if (file) {
-          const imgData = await getBase64(file);
-          payload.fileData = imgData.fileData;
-          payload.mimeType = imgData.mimeType;
-        }
-
-        let action = activeTab.value === 2 ? 'saveTrans3Data' : 'saveMonitoringData';
         
         if (activeTab.value < 2) {
           payload.tglMonitoring = new Date().toLocaleDateString('id-ID');
@@ -775,41 +821,52 @@
         } else {
           payload.tgl = new Date().toLocaleDateString('id-ID');
           payload.jumlahBotol = formData.value.jmlBotol;
-          payload.rataPlanlet = 0; // Default value as it's not in UI
+          payload.rataPlanlet = 0;
+        }
+        
+        // 2. UI Updates (Optimistic)
+        closeForm();
+        if (currentList && currentId !== null) {
+          fadingOutId.value = currentId;
+          triggerToast('success', 'Menyimpan Data...', 'Data sedang diproses di latar belakang');
+          setTimeout(() => {
+            const index = currentList.findIndex(i => i.id === currentId);
+            if (index !== -1) { currentList.splice(index, 1); }
+            fadingOutId.value = null;
+          }, 500);
         }
 
-        const res = await fetchAPI(action, 'POST', payload);
-        isSubmitting.value = false;
-
-        if (res.result === "SUCCESS") {
-          const currentId = formData.value.id;
-          let currentList = activeTab.value === 0 ? trans1.value : activeTab.value === 1 ? trans2.value : trans3.value;
-          
-          const now = new Date();
-          const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-          let activity = { kode: formData.value.kode, periode: formData.value.periode, status: formData.value.status, waktu: timeStr };
-          if (activeTab.value === 0 || activeTab.value === 1) { activity.label = 'Presentase'; activity.value = formData.value.presentase + '%'; } 
-          else { activity.label = 'Jml Botol'; activity.value = formData.value.jmlBotol; }
-          activities.value.unshift(activity);
-
-          closeForm();
-          if (currentList && currentId !== null) {
-            fadingOutId.value = currentId;
-            triggerToast('success', 'Berhasil Disimpan', 'Data monitoring telah diperbarui');
-            setTimeout(() => {
-              const index = currentList.findIndex(i => i.id === currentId);
-              if (index !== -1) { currentList.splice(index, 1); }
-              fadingOutId.value = null;
-            }, 500);
+        // 3. Background API Call (No Race Condition because it's just a simple POST)
+        (async () => {
+          try {
+            const file = fileInput.value.files[0];
+            if (file) {
+              const imgData = await getBase64(file);
+              payload.fileData = imgData.fileData;
+              payload.mimeType = imgData.mimeType;
+            }
+            let action = activeTab.value === 2 ? 'saveTrans3Data' : 'saveMonitoringData';
+            const res = await fetchAPI(action, 'POST', payload);
+            if (res.result !== "SUCCESS") {
+              triggerToast('error', 'Gagal Menyimpan', 'Data gagal tersimpan di server');
+            }
+          } catch (e) {
+            triggerToast('error', 'Error', e.toString());
           }
-        } else {
-          triggerToast('error', 'Gagal Menyimpan', res.result || "Terjadi kesalahan");
-        }
+        })();
+
+        // 4. Log Activity locally
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        let activity = { kode: formData.value.kode, periode: formData.value.periode, status: formData.value.status, waktu: timeStr };
+        if (activeTab.value === 0 || activeTab.value === 1) { activity.label = 'Presentase'; activity.value = formData.value.presentase + '%'; } 
+        else { activity.label = 'Jml Botol'; activity.value = formData.value.jmlBotol; }
+        activities.value.unshift(activity);
       };
 
       return {
         isLoggedIn, isLoggingIn, loginForm, handleLogin,
-        activeTab, tabs, currentView,
+        activeTab, tabs, visibleTabs, currentView,
         trans1, trans2, trans3, resultData,
         filteredTrans1, filteredTrans2, filteredTrans3, filteredResult,
         paginatedTrans1, paginatedTrans2, paginatedTrans3, paginatedResult,
@@ -818,11 +875,13 @@
         loadMore1, loadMore2, loadMore3, loadMoreResult,
         totalBotol,
         showForm, dropdownOpen, formData, pertumbuhanOptions, jumlahOptions, fotoPreview, fileInput,
-        openForm, closeForm, handleFoto, submitForm, isSubmitting,
+        openForm, closeForm, handleFoto, submitForm,
         fadingOutId, showToast, toastType, toastTitle, toastMessage, formErrors,
-        profileData, showPassword,
+        profileData,
         showActivityModal, activities,
-        autoKeterangan
+        showResultModal, resultDetailData, openResultDetail,
+        autoKeterangan,
+        touchStartY, sheetTranslate, onTouchStart, onTouchMove, onTouchEnd
       };
     }
   });
