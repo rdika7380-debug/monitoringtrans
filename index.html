@@ -2,7 +2,6 @@
 <html lang="id">
 <head>
 <meta charset="UTF-8">
-<!-- Meta Tags WAJIB untuk menembus Notch / Dynamic Island -->
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="mobile-web-app-capable" content="yes">
@@ -21,9 +20,9 @@
     overflow-x: hidden; -webkit-font-smoothing: antialiased;
     -webkit-tap-highlight-color: transparent;
     box-sizing: border-box;
-    margin: 0; padding: 0; /* Reset margin/padding */
+    margin: 0; padding: 0; 
     min-height: 100vh;
-    min-height: 100dvh; /* Dynamic viewport height untuk mobile */
+    min-height: 100dvh; 
   }
   .font-display { font-family: 'Space Grotesk', sans-serif; }
   ::-webkit-scrollbar { width: 0; height: 0; display: none; }
@@ -81,7 +80,6 @@
   button, .no-select { -webkit-user-select:none; user-select:none; }
   [v-cloak] { display:none; }
 
-  /* Smooth transition for sheet bounce back */
   .sheet-content { transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); will-change: transform; }
   .sheet-backdrop { transition: opacity 0.3s ease; will-change: opacity; }
 
@@ -95,7 +93,7 @@
 </head>
 <body>
 <div id="app" v-cloak :style="{ '--accent': currentAccent, '--accent-ring': currentAccent + '99' }">
-  <!-- Background (Fixed at 0,0 to break through notch) -->
+  <!-- Background -->
   <div class="fixed top-0 left-0 right-0 bottom-0 -z-10 overflow-hidden pointer-events-none">
     <div class="absolute inset-0 grid-bg"></div>
     <div class="absolute inset-0" :style="`background: radial-gradient(circle at 15% 15%, ${currentAccent}14, transparent 40%), radial-gradient(circle at 85% 55%, ${currentAccent}10, transparent 45%), radial-gradient(circle at 50% 95%, ${currentAccent}0D, transparent 50%);`"></div>
@@ -108,7 +106,7 @@
     <div class="float-sq absolute top-[80%] left-[30%] w-4 h-4 rounded-md" :style="`border: 1px solid ${currentAccent}20; animation-delay: 6s;`"></div>
   </div>
 
-  <!-- LOGIN SCREEN (Added padding top to avoid notch overlap) -->
+  <!-- LOGIN SCREEN -->
   <div v-if="!isLoggedIn" class="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center px-5" style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);">
     <div class="glass-strong rounded-3xl p-8 w-full max-w-sm slide-up">
       <div class="flex flex-col items-center mb-6">
@@ -135,8 +133,8 @@
     </div>
   </div>
 
-  <!-- MAIN APP (Added padding top to avoid notch overlap) -->
-  <div v-else class="relative max-w-md mx-auto min-h-screen px-5 pb-36" style="padding-top: env(safe-area-inset-top);">
+  <!-- MAIN APP (Locked scroll when modal is open) -->
+  <div v-else class="relative max-w-md mx-auto h-screen overflow-y-auto px-5 pb-36" style="padding-top: env(safe-area-inset-top);" :class="{ 'overflow-hidden': isModalOpen }">
     <header class="mb-6 flex items-center justify-between sticky top-0 z-30 py-2 -mx-5 px-5" style="background: linear-gradient(to bottom, rgba(2,2,2,0.95), transparent);">
       <div class="flex items-center gap-3">
         <div class="relative">
@@ -412,9 +410,10 @@
   <transition name="modal">
     <div v-if="showForm" class="fixed inset-0 z-[100] flex items-end justify-center">
       <div class="absolute inset-0 bg-black/70 backdrop-blur-md sheet-backdrop" ref="formBackdrop" @click="closeForm"></div>
-      <div class="relative w-full max-w-md glass-strong rounded-t-3xl max-h-[92vh] overflow-y-auto slide-up pb-10 sheet-content" ref="formSheet" style="box-shadow: 0 -10px 40px rgba(0,0,0,0.5);" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">
-        <div class="sticky top-0 z-10 glass-strong rounded-t-3xl pb-3 pt-3 px-5 mb-4" style="background: linear-gradient(to bottom, rgba(10,15,20,0.98) 60%, rgba(10,15,20,0.8) 80%, transparent 100%);">
-          <div class="w-12 h-1.5 rounded-full mx-auto mb-3 cursor-grab" :style="`background-color: ${currentAccent}4D;`"></div>
+      <div class="relative w-full max-w-md glass-strong rounded-t-3xl max-h-[92vh] flex flex-col slide-up sheet-content" ref="formSheet" style="box-shadow: 0 -10px 40px rgba(0,0,0,0.5);">
+        <!-- Swipeable Header Area -->
+        <div class="z-10 glass-strong rounded-t-3xl pb-3 pt-3 px-5 mb-4 cursor-grab" style="background: linear-gradient(to bottom, rgba(10,15,20,0.98) 60%, rgba(10,15,20,0.8) 80%, transparent 100%);" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">
+          <div class="w-12 h-1.5 rounded-full mx-auto mb-3" :style="`background-color: ${currentAccent}4D;`"></div>
           <p class="text-center text-[9px] uppercase tracking-widest text-white/30 mb-3">Geser ke bawah untuk menutup</p>
           <div class="flex items-center justify-between">
             <div>
@@ -426,7 +425,8 @@
             </button>
           </div>
         </div>
-        <div class="px-5 space-y-5">
+        <!-- Scrollable Form Content -->
+        <div class="px-5 space-y-5 pb-10 overflow-y-auto">
           <div class="grid grid-cols-2 gap-3">
             <div class="glass rounded-2xl p-3.5 border border-white/5">
               <p class="text-[9px] uppercase tracking-wider text-white/40 mb-1">{{ activeTab === 2 ? 'Kode Kebun' : 'Kode Project' }}</p>
@@ -539,7 +539,7 @@
               </div>
             </div>
           </div>
-          <button @click="submitForm" class="w-full text-[#020202] font-display font-bold text-sm py-4 rounded-2xl active:scale-95 transition-all duration-300 no-select mt-4 flex items-center justify-center gap-2" :style="`background-color: ${currentAccent}; box-shadow: 0 0 25px ${currentAccent}80;`">
+          <button @click="submitForm" class="w-full text-[#020202] font-display font-bold text-sm py-4 rounded-2xl active:scale-95 transition-all duration-300 no-select flex items-center justify-center gap-2" :style="`background-color: ${currentAccent}; box-shadow: 0 0 25px ${currentAccent}80;`">
             <span>Simpan Data Monitoring</span>
           </button>
         </div>
@@ -551,9 +551,9 @@
   <transition name="modal">
     <div v-if="showResultModal" class="fixed inset-0 z-[100] flex items-end justify-center">
       <div class="absolute inset-0 bg-black/70 backdrop-blur-md sheet-backdrop" ref="resultBackdrop" @click="showResultModal = false"></div>
-      <div class="relative w-full max-w-md glass-strong rounded-t-3xl max-h-[85vh] overflow-y-auto slide-up pb-10 sheet-content" ref="resultSheet" style="box-shadow: 0 -10px 40px rgba(0,0,0,0.5);" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">
-        <div class="sticky top-0 z-10 glass-strong rounded-t-3xl pb-3 pt-3 px-5 mb-4" style="background: linear-gradient(to bottom, rgba(10,15,20,0.98) 60%, rgba(10,15,20,0.8) 80%, transparent 100%);">
-          <div class="w-12 h-1.5 rounded-full mx-auto mb-3 cursor-grab" :style="`background-color: ${currentAccent}4D;`"></div>
+      <div class="relative w-full max-w-md glass-strong rounded-t-3xl max-h-[85vh] flex flex-col slide-up sheet-content" ref="resultSheet" style="box-shadow: 0 -10px 40px rgba(0,0,0,0.5);">
+        <div class="z-10 glass-strong rounded-t-3xl pb-3 pt-3 px-5 mb-4 cursor-grab" style="background: linear-gradient(to bottom, rgba(10,15,20,0.98) 60%, rgba(10,15,20,0.8) 80%, transparent 100%);" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">
+          <div class="w-12 h-1.5 rounded-full mx-auto mb-3" :style="`background-color: ${currentAccent}4D;`"></div>
           <p class="text-center text-[9px] uppercase tracking-widest text-white/30 mb-3">Geser ke bawah untuk menutup</p>
           <div class="flex items-center justify-between">
             <div>
@@ -565,7 +565,7 @@
             </button>
           </div>
         </div>
-        <div class="px-5 space-y-4">
+        <div class="px-5 space-y-4 pb-10 overflow-y-auto">
           <div v-if="resultDetailData.foto" class="relative rounded-2xl overflow-hidden h-60 bg-black/20">
             <img :src="resultDetailData.foto" class="w-full h-full object-cover" alt="Foto Hasil">
             <div class="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent"></div>
@@ -605,16 +605,16 @@
   <transition name="modal">
     <div v-if="showActivityModal" class="fixed inset-0 z-[100] flex items-end justify-center">
       <div class="absolute inset-0 bg-black/70 backdrop-blur-md sheet-backdrop" ref="activityBackdrop" @click="showActivityModal = false"></div>
-      <div class="relative w-full max-w-md glass-strong rounded-t-3xl max-h-[80vh] overflow-y-auto slide-up pb-10 sheet-content" ref="activitySheet" style="box-shadow: 0 -10px 40px rgba(0,0,0,0.5);" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">
-        <div class="sticky top-0 z-10 glass-strong rounded-t-3xl pb-3 pt-3 px-5 mb-4" style="background: linear-gradient(to bottom, rgba(10,15,20,0.98) 60%, rgba(10,15,20,0.8) 80%, transparent 100%);">
-          <div class="w-12 h-1.5 rounded-full mx-auto mb-3 cursor-grab" :style="`background-color: ${currentAccent}4D;`"></div>
+      <div class="relative w-full max-w-md glass-strong rounded-t-3xl max-h-[80vh] flex flex-col slide-up sheet-content" ref="activitySheet" style="box-shadow: 0 -10px 40px rgba(0,0,0,0.5);">
+        <div class="z-10 glass-strong rounded-t-3xl pb-3 pt-3 px-5 mb-4 cursor-grab" style="background: linear-gradient(to bottom, rgba(10,15,20,0.98) 60%, rgba(10,15,20,0.8) 80%, transparent 100%);" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">
+          <div class="w-12 h-1.5 rounded-full mx-auto mb-3" :style="`background-color: ${currentAccent}4D;`"></div>
           <p class="text-center text-[9px] uppercase tracking-widest text-white/30 mb-3">Geser ke bawah untuk menutup</p>
           <div class="flex items-center justify-between">
             <div><p class="text-[10px] uppercase tracking-[0.18em]" :style="`color: ${currentAccent};`">Riwayat</p><h2 class="font-display text-lg font-bold">Aktivitas Terbaru</h2></div>
             <button @click="showActivityModal = false" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center active:scale-90 transition-transform no-select"><svg class="w-4 h-4 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button>
           </div>
         </div>
-        <div class="px-5 space-y-3">
+        <div class="px-5 space-y-3 pb-10 overflow-y-auto">
           <div v-if="activities.length === 0" class="py-10 text-center"><p class="text-sm text-white/40">Belum ada aktivitas terbaru</p></div>
           <div v-for="(act, i) in activities" :key="i" class="glass rounded-2xl p-4 flex items-start gap-3 border border-white/5">
             <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" :class="act.status === 'BERHASIL' ? 'bg-emerald-400/10 text-emerald-300' : act.status === 'PENDING' ? 'bg-amber-400/10 text-amber-300' : 'bg-rose-400/10 text-rose-300'"><svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" /></svg></div>
@@ -639,12 +639,12 @@
   <transition name="modal">
     <div v-if="showLogoutModal" class="fixed inset-0 z-[100] flex items-end justify-center">
       <div class="absolute inset-0 bg-black/70 backdrop-blur-md sheet-backdrop" ref="logoutBackdrop" @click="showLogoutModal = false"></div>
-      <div class="relative w-full max-w-md glass-strong rounded-t-3xl max-h-[50vh] overflow-y-auto slide-up pb-10 sheet-content" ref="logoutSheet" style="box-shadow: 0 -10px 40px rgba(0,0,0,0.5);" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">
-        <div class="sticky top-0 z-10 glass-strong rounded-t-3xl pb-3 pt-3 px-5 mb-4" style="background: linear-gradient(to bottom, rgba(10,15,20,0.98) 60%, rgba(10,15,20,0.8) 80%, transparent 100%);">
-          <div class="w-12 h-1.5 rounded-full mx-auto mb-3 cursor-grab" :style="`background-color: ${currentAccent}4D;`"></div>
+      <div class="relative w-full max-w-md glass-strong rounded-t-3xl max-h-[50vh] flex flex-col slide-up sheet-content" ref="logoutSheet" style="box-shadow: 0 -10px 40px rgba(0,0,0,0.5);">
+        <div class="z-10 glass-strong rounded-t-3xl pb-3 pt-3 px-5 mb-4 cursor-grab" style="background: linear-gradient(to bottom, rgba(10,15,20,0.98) 60%, rgba(10,15,20,0.8) 80%, transparent 100%);" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">
+          <div class="w-12 h-1.5 rounded-full mx-auto mb-3" :style="`background-color: ${currentAccent}4D;`"></div>
           <p class="text-center text-[9px] uppercase tracking-widest text-white/30 mb-3">Geser ke bawah untuk menutup</p>
         </div>
-        <div class="px-5 space-y-5">
+        <div class="px-5 space-y-5 pb-10 overflow-y-auto">
           <div class="flex flex-col items-center text-center pt-2">
             <div class="w-16 h-16 rounded-full bg-rose-400/10 flex items-center justify-center mb-4">
               <svg class="w-8 h-8 text-rose-400" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -681,7 +681,7 @@
 </div>
 
 <script>
-  const { createApp, ref, computed } = Vue;
+  const { createApp, ref, computed, watch } = Vue;
   const app = createApp({
     setup() {
       const API_URL = 'https://script.google.com/macros/s/AKfycbxLrFlu7WzEzdD33zolptblrBsHkAe-OFcALsk_NcyvJnkBsJxDy4viSzoFl4qP2k4z3A/exec';
@@ -692,14 +692,17 @@
       
       const activeTab = ref(0);
       
-      // Dynamic Accent Colors per Tab
-      const accentColors = ['#B2D5E5', '#A7E5B2', '#E5D5B2', '#E5B2C4', '#D5B2E5']; // T1, T2, T3, Result, Profile
+      const accentColors = ['#B2D5E5', '#A7E5B2', '#E5D5B2', '#E5B2C4', '#D5B2E5']; 
       const currentAccent = computed(() => accentColors[activeTab.value] || '#B2D5E5');
       
       const search1 = ref(''); const search2 = ref(''); const search3 = ref(''); const searchResult = ref('');
       const showActivityModal = ref(false);
       const showResultModal = ref(false);
       const showLogoutModal = ref(false);
+      const showForm = ref(false);
+      
+      // Lock background scroll when any modal is open
+      const isModalOpen = computed(() => showForm.value || showActivityModal.value || showResultModal.value || showLogoutModal.value);
       
       const profileData = ref({ nama: "", jabatan: "", username: "", tab: "" });
       
@@ -720,8 +723,8 @@
         if (access.includes('T1')) arr.push(0);
         if (access.includes('T2')) arr.push(1);
         if (access.includes('T3')) arr.push(2);
-        arr.push(3); // RESULT
-        arr.push(4); // PROFILE
+        arr.push(3); 
+        arr.push(4); 
         return arr;
       });
 
@@ -751,13 +754,12 @@
 
       const totalBotol = computed(() => trans3.value.reduce((sum, i) => sum + i.jmlBotol, 0));
 
-      const showForm = ref(false); const dropdownOpen = ref(false); const fotoPreview = ref(null); const fileInput = ref(null);
+      const dropdownOpen = ref(false); const fotoPreview = ref(null); const fileInput = ref(null);
       const fadingOutId = ref(null); const showToast = ref(false); const toastType = ref('success'); const toastTitle = ref(''); const toastMessage = ref('');
       const formErrors = ref({}); const activities = ref([]); const resultDetailData = ref({});
       const pertumbuhanOptions = ['Tumbuh Baik', 'Tumbuh Kurang Baik', 'Tidak Tumbuh', 'Abnormal']; const jumlahOptions = ['Sedikit', 'Banyak'];
       const formData = ref({});
 
-      // DOM Refs for smooth swipe (no Vue reactivity lag)
       const formSheet = ref(null); const formBackdrop = ref(null);
       const resultSheet = ref(null); const resultBackdrop = ref(null);
       const activitySheet = ref(null); const activityBackdrop = ref(null);
@@ -769,14 +771,13 @@
       const onTouchStart = (e) => {
         touchStartY.value = e.touches[0].clientY;
         
-        // Determine which sheet is active to manipulate directly
         if (showForm.value) { currentSheet = formSheet.value; currentBackdrop = formBackdrop.value; }
         else if (showResultModal.value) { currentSheet = resultSheet.value; currentBackdrop = resultBackdrop.value; }
         else if (showActivityModal.value) { currentSheet = activitySheet.value; currentBackdrop = activityBackdrop.value; }
         else if (showLogoutModal.value) { currentSheet = logoutSheet.value; currentBackdrop = logoutBackdrop.value; }
 
         if (currentSheet) {
-          currentSheet.style.transition = 'none'; // Disable transition during drag
+          currentSheet.style.transition = 'none'; 
           currentBackdrop.style.transition = 'none';
         }
       };
@@ -793,7 +794,7 @@
       const onTouchEnd = () => {
         if (!currentSheet) return;
         
-        currentSheet.style.transition = 'transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease'; // Re-enable transition
+        currentSheet.style.transition = 'transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease'; 
         currentBackdrop.style.transition = 'opacity 0.3s ease';
         
         let currentTranslate = 0;
@@ -807,7 +808,6 @@
           if (showResultModal.value) showResultModal.value = false;
           if (showLogoutModal.value) showLogoutModal.value = false;
         } else {
-          // Bounce back
           currentSheet.style.transform = 'translateY(0)';
           currentBackdrop.style.opacity = 1;
         }
@@ -950,7 +950,7 @@
         if (activeTab.value < 2) {
           payload.tglMonitoring = new Date().toLocaleDateString('id-ID');
           payload.planlet = formData.value.jumlah;
-          payload.persentase = formData.value.presentase + '%'; // Format as "30%" or "0%"
+          payload.persentase = formData.value.presentase + '%'; 
         } else {
           payload.tgl = new Date().toLocaleDateString('id-ID');
           payload.jumlahBotol = formData.value.jmlBotol;
@@ -996,7 +996,7 @@
 
       return {
         isLoggedIn, isLoggingIn, loginForm, handleLogin, confirmLogout,
-        activeTab, tabs, visibleTabs, currentView, currentAccent,
+        activeTab, tabs, visibleTabs, currentView, currentAccent, isModalOpen,
         trans1, trans2, trans3, resultData,
         filteredTrans1, filteredTrans2, filteredTrans3, filteredResult,
         paginatedTrans1, paginatedTrans2, paginatedTrans3, paginatedResult,
@@ -1012,7 +1012,6 @@
         showResultModal, resultDetailData, openResultDetail,
         showLogoutModal,
         autoKeterangan,
-        // DOM Refs
         formSheet, formBackdrop, resultSheet, resultBackdrop, activitySheet, activityBackdrop, logoutSheet, logoutBackdrop,
         onTouchStart, onTouchMove, onTouchEnd
       };
