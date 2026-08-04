@@ -16,12 +16,9 @@
 <style>
   :root { --bg: #020202; }
   
-  /* FIX SAFE AREA iOS: html & body dikunci penuh ke layar (bukan hanya min-height),
-     supaya dokumen tidak bisa "rubber-band" discroll native. Scroll asli iOS-lah yang
-     membuat area aman (notch/Dynamic Island & home indicator) sempat menampilkan
-     background putih bawaan WKWebView, bukan background gelap aplikasi. */
+  /* Kunci penuh html/body ke layar untuk mencegah scroll native iOS */
   html, body {
-    background: #020202;
+    background: #020202; 
     font-family: 'Inter', sans-serif; color: #fff;
     -webkit-font-smoothing: antialiased;
     -webkit-tap-highlight-color: transparent;
@@ -29,24 +26,12 @@
     margin: 0; padding: 0;
     width: 100%;
     height: 100%;
-    position: fixed;
+    min-height: 100vh; /* Fallback */
+    min-height: 100dvh;
+    position: fixed; /* Mencegah scroll native */
     inset: 0;
     overflow: hidden;
-    overscroll-behavior: none;
-  }
-
-  /* #app sekarang menjadi satu-satunya container yang di-scroll (menggantikan
-     scroll bawaan body). Karena #app selalu mengisi 100% layar & berwarna gelap,
-     area aman di atas (notch) dan bawah (home indicator) selalu tertutup penuh. */
-  #app {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-    overscroll-behavior-y: contain;
-    background: #020202;
+    overscroll-behavior: none; /* Matikan rubber-band bounce */
   }
   
   .font-display { font-family: 'Space Grotesk', sans-serif; }
@@ -118,11 +103,11 @@
 </head>
 <body>
 
-<!-- App Wrapper: Memisahkan background fisik dengan konten -->
-<div id="app" v-cloak class="w-full" :class="{ 'overflow-hidden': isModalOpen }" :style="{ '--accent': currentAccent, '--accent-ring': currentAccent + '99' }">
+<!-- App Wrapper: Satu-satunya container yang discroll -->
+<div id="app" v-cloak class="relative w-full h-full overflow-y-auto overscroll-y-none" style="background: #020202; -webkit-overflow-scrolling: touch;" :class="{ 'overflow-hidden': isModalOpen }" :style="{ '--accent': currentAccent, '--accent-ring': currentAccent + '99' }">
   
-  <!-- Background Layer (Fixed, menembus notch karena top:0, left:0, right:0, bottom:0) -->
-  <div class="fixed top-0 left-0 right-0 bottom-0 -z-10 overflow-hidden pointer-events-none">
+  <!-- Background Layer (Fixed, menembus notch karena inset-0) -->
+  <div class="fixed inset-0 z-0 overflow-hidden pointer-events-none">
     <div class="absolute inset-0 grid-bg"></div>
     <div class="absolute inset-0" :style="`background: radial-gradient(circle at 15% 15%, ${currentAccent}14, transparent 40%), radial-gradient(circle at 85% 55%, ${currentAccent}10, transparent 45%), radial-gradient(circle at 50% 95%, ${currentAccent}0D, transparent 50%);`"></div>
     <div class="orb-1 absolute top-[-120px] left-[-60px] w-[320px] h-[320px] rounded-full" :style="`background:${currentAccent};filter:blur(120px);opacity:0.15;`"></div>
@@ -135,7 +120,7 @@
   </div>
 
   <!-- LOGIN SCREEN -->
-  <div v-if="!isLoggedIn" class="fixed top-0 left-0 w-full h-full flex items-center justify-center px-5" style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);">
+  <div v-if="!isLoggedIn" class="fixed inset-0 flex items-center justify-center px-5 z-20" style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);">
     <div class="glass-strong rounded-3xl p-8 w-full max-w-sm slide-up">
       <div class="flex flex-col items-center mb-6">
         <div class="w-20 h-20 rounded-3xl glass flex items-center justify-center overflow-hidden p-2 mb-4">
@@ -161,8 +146,8 @@
     </div>
   </div>
 
-  <!-- MAIN APP (Scrollable, padding top aman untuk notch) -->
-  <div v-else class="relative max-w-md mx-auto min-h-screen min-h-[100dvh] px-5 pb-36" style="padding-top: calc(env(safe-area-inset-top) + 1.5rem);" :class="{ 'overflow-hidden': isModalOpen }">
+  <!-- MAIN APP (Scrollable content, relative to #app) -->
+  <div v-else class="relative z-10 max-w-md mx-auto px-5 pb-36" style="padding-top: calc(env(safe-area-inset-top) + 1.5rem);">
     <header class="mb-6 flex items-center justify-between sticky top-0 z-30 py-2 -mx-5 px-5" style="background: linear-gradient(to bottom, rgba(2,2,2,0.95), transparent);">
       <div class="flex items-center gap-3">
         <div class="relative">
