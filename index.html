@@ -10,17 +10,13 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
-  :root { --bg: #020202; --accent: #B2D5E5; }
+  :root { --bg: #020202; }
   html, body {
     background: #020202; font-family: 'Inter', sans-serif; color: #fff;
     overflow-x: hidden; -webkit-font-smoothing: antialiased;
     -webkit-tap-highlight-color: transparent;
-    /* Edge-to-Edge support for Notch / Dynamic Island */
-    padding-top: env(safe-area-inset-top);
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
     box-sizing: border-box;
+    margin: 0; padding: 0; /* Reset margin/padding agar benar-benar full screen */
   }
   .font-display { font-family: 'Space Grotesk', sans-serif; }
   ::-webkit-scrollbar { width: 0; height: 0; display: none; }
@@ -37,7 +33,7 @@
   .orb-3 { animation: float-orb-3 25s ease-in-out infinite; }
 
   .grid-bg {
-    background-image: linear-gradient(rgba(178, 213, 229, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(178, 213, 229, 0.03) 1px, transparent 1px);
+    background-image: linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
     background-size: 40px 40px;
     mask-image: radial-gradient(circle at 50% 50%, black, transparent 80%);
     -webkit-mask-image: radial-gradient(circle at 50% 50%, black, transparent 80%);
@@ -46,14 +42,7 @@
   .float-sq { animation: float-square 12s linear infinite; }
 
   @keyframes shimmer { 0%{transform:translateX(-150%) skewX(-20deg)} 100%{transform:translateX(250%) skewX(-20deg)} }
-  .shimmer-line::before {
-    content:''; position:absolute; top:0; left:0; width:60%; height:100%;
-    background:linear-gradient(90deg,transparent,rgba(178,213,229,0.18),transparent);
-    transform:translateX(-150%) skewX(-20deg); animation:shimmer 4s ease-in-out infinite;
-    pointer-events:none; z-index:1;
-  }
-  @keyframes pulse-ring { 0%{box-shadow:0 0 0 0 rgba(178,213,229,0.6)} 100%{box-shadow:0 0 0 10px rgba(178,213,229,0)} }
-  .pulse-ring { animation: pulse-ring 2s infinite; }
+  @keyframes pulse-ring { 0%{box-shadow:0 0 0 0 var(--accent-ring)} 100%{box-shadow:0 0 0 10px transparent} }
   @keyframes view-in { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
   .view-in { animation: view-in 0.45s cubic-bezier(0.22,1,0.36,1); }
   @keyframes card-in { from{opacity:0;transform:translateY(10px)} to{opacity:1;transform:translateY(0)} }
@@ -71,30 +60,23 @@
   }
   .glass-strong {
     background: rgba(10,15,20,0.85); backdrop-filter: blur(28px) saturate(160%); -webkit-backdrop-filter: blur(28px) saturate(160%);
-    border: 1px solid rgba(178,213,229,0.14); box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.12), inset 0 -1px 0 0 rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.6);
+    border: 1px solid rgba(255,255,255,0.1); box-shadow: inset 0 1px 0 0 rgba(255,255,255,0.12), inset 0 -1px 0 0 rgba(0,0,0,0.4), 0 12px 40px rgba(0,0,0,0.6);
   }
   .glass-input { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); transition: all 0.2s; }
-  .glass-input:focus { background: rgba(178,213,229,0.05); border-color: rgba(178,213,229,0.3); box-shadow: 0 0 0 3px rgba(178,213,229,0.1); }
+  .glass-input:focus { border-color: var(--accent) !important; box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 10%, transparent) !important; }
   .error-border { border-color: rgba(244, 63, 94, 0.5) !important; box-shadow: 0 0 0 3px rgba(244, 63, 94, 0.1) !important; background: rgba(244, 63, 94, 0.05) !important; }
 
   .custom-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 8px; border-radius: 4px; background: rgba(255,255,255,0.1); outline: none; cursor: pointer; }
-  .custom-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 24px; height: 24px; border-radius: 50%; background: #fff; border: 4px solid #B2D5E5; box-shadow: 0 0 12px rgba(178,213,229,0.6); cursor: pointer; transition: transform 0.2s; }
+  .custom-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 24px; height: 24px; border-radius: 50%; background: #fff; border: 4px solid var(--accent); box-shadow: 0 0 12px var(--accent); cursor: pointer; transition: transform 0.2s; }
   .custom-slider::-webkit-slider-thumb:active { transform: scale(1.2); }
-  .custom-slider::-moz-range-thumb { width: 24px; height: 24px; border-radius: 50%; background: #fff; border: 4px solid #B2D5E5; box-shadow: 0 0 12px rgba(178,213,229,0.6); cursor: pointer; transition: transform 0.2s; }
+  .custom-slider::-moz-range-thumb { width: 24px; height: 24px; border-radius: 50%; background: #fff; border: 4px solid var(--accent); box-shadow: 0 0 12px var(--accent); cursor: pointer; transition: transform 0.2s; }
 
-  .safe-bottom { padding-bottom: env(safe-area-inset-bottom); }
   button, .no-select { -webkit-user-select:none; user-select:none; }
   [v-cloak] { display:none; }
 
-  /* Smooth transitions for swipe down gesture */
-  .sheet-content {
-    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
-    will-change: transform, opacity;
-  }
-  .sheet-backdrop {
-    transition: opacity 0.3s ease;
-    will-change: opacity;
-  }
+  /* Smooth transition for sheet bounce back */
+  .sheet-content { transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1); will-change: transform; }
+  .sheet-backdrop { transition: opacity 0.3s ease; will-change: opacity; }
 
   .modal-enter-active, .modal-leave-active { transition: opacity 0.3s ease; }
   .modal-enter-from, .modal-leave-to { opacity: 0; }
@@ -105,22 +87,22 @@
 </style>
 </head>
 <body>
-<div id="app" v-cloak>
-  <!-- Background (Fixed to break through notch/dynamic island) -->
-  <div class="fixed inset-0 -z-10 overflow-hidden pointer-events-none">
+<div id="app" v-cloak :style="{ '--accent': currentAccent, '--accent-ring': currentAccent + '99' }">
+  <!-- Background (Fixed at 0,0 to break through notch) -->
+  <div class="fixed top-0 left-0 right-0 bottom-0 -z-10 overflow-hidden pointer-events-none">
     <div class="absolute inset-0 grid-bg"></div>
-    <div class="absolute inset-0" style="background: radial-gradient(circle at 15% 15%, rgba(178,213,229,0.09), transparent 40%), radial-gradient(circle at 85% 55%, rgba(178,213,229,0.07), transparent 45%), radial-gradient(circle at 50% 95%, rgba(178,213,229,0.05), transparent 50%);"></div>
-    <div class="orb-1 absolute top-[-120px] left-[-60px] w-[320px] h-[320px] rounded-full" style="background:#B2D5E5;filter:blur(120px);opacity:0.15;"></div>
-    <div class="orb-2 absolute top-[38%] right-[-90px] w-[300px] h-[300px] rounded-full" style="background:#B2D5E5;filter:blur(110px);opacity:0.12;"></div>
-    <div class="orb-3 absolute bottom-[-120px] left-[25%] w-[340px] h-[340px] rounded-full" style="background:#B2D5E5;filter:blur(140px);opacity:0.10;"></div>
+    <div class="absolute inset-0" :style="`background: radial-gradient(circle at 15% 15%, ${currentAccent}14, transparent 40%), radial-gradient(circle at 85% 55%, ${currentAccent}10, transparent 45%), radial-gradient(circle at 50% 95%, ${currentAccent}0D, transparent 50%);`"></div>
+    <div class="orb-1 absolute top-[-120px] left-[-60px] w-[320px] h-[320px] rounded-full" :style="`background:${currentAccent};filter:blur(120px);opacity:0.15;`"></div>
+    <div class="orb-2 absolute top-[38%] right-[-90px] w-[300px] h-[300px] rounded-full" :style="`background:${currentAccent};filter:blur(110px);opacity:0.12;`"></div>
+    <div class="orb-3 absolute bottom-[-120px] left-[25%] w-[340px] h-[340px] rounded-full" :style="`background:${currentAccent};filter:blur(140px);opacity:0.10;`"></div>
     
-    <div class="float-sq absolute top-[20%] left-[10%] w-6 h-6 rounded-md border border-[#B2D5E5]/10"></div>
-    <div class="float-sq absolute top-[60%] right-[15%] w-8 h-8 rounded-md border border-[#B2D5E5]/10" style="animation-delay: 3s;"></div>
-    <div class="float-sq absolute top-[80%] left-[30%] w-4 h-4 rounded-md border border-[#B2D5E5]/10" style="animation-delay: 6s;"></div>
+    <div class="float-sq absolute top-[20%] left-[10%] w-6 h-6 rounded-md" :style="`border: 1px solid ${currentAccent}20`"></div>
+    <div class="float-sq absolute top-[60%] right-[15%] w-8 h-8 rounded-md" :style="`border: 1px solid ${currentAccent}20; animation-delay: 3s;`"></div>
+    <div class="float-sq absolute top-[80%] left-[30%] w-4 h-4 rounded-md" :style="`border: 1px solid ${currentAccent}20; animation-delay: 6s;`"></div>
   </div>
 
-  <!-- LOGIN SCREEN -->
-  <div v-if="!isLoggedIn" class="fixed inset-0 flex items-center justify-center px-5">
+  <!-- LOGIN SCREEN (Added padding top to avoid notch overlap) -->
+  <div v-if="!isLoggedIn" class="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center px-5" style="padding-top: env(safe-area-inset-top); padding-bottom: env(safe-area-inset-bottom);">
     <div class="glass-strong rounded-3xl p-8 w-full max-w-sm slide-up">
       <div class="flex flex-col items-center mb-6">
         <div class="w-20 h-20 rounded-3xl glass flex items-center justify-center overflow-hidden p-2 mb-4">
@@ -138,7 +120,7 @@
           <label class="text-[10px] uppercase tracking-wider text-white/50 mb-2 block font-display">Password</label>
           <input v-model="loginForm.password" type="password" class="w-full glass-input rounded-2xl p-4 text-sm outline-none" placeholder="Masukkan password" @keyup.enter="handleLogin">
         </div>
-        <button @click="handleLogin" class="w-full bg-[#B2D5E5] text-[#020202] font-display font-bold text-sm py-4 rounded-2xl active:scale-95 transition-all duration-300 no-select flex items-center justify-center gap-2">
+        <button @click="handleLogin" class="w-full text-[#020202] font-display font-bold text-sm py-4 rounded-2xl active:scale-95 transition-all duration-300 no-select flex items-center justify-center gap-2" :style="`background-color: ${currentAccent}; box-shadow: 0 0 25px ${currentAccent}80;`">
           <span v-if="!isLoggingIn">Masuk</span>
           <div v-else class="w-5 h-5 border-2 border-[#020202]/30 border-t-[#020202] rounded-full animate-spin"></div>
         </button>
@@ -146,15 +128,15 @@
     </div>
   </div>
 
-  <!-- MAIN APP -->
-  <div v-else class="relative max-w-md mx-auto min-h-screen px-5 pb-36">
+  <!-- MAIN APP (Added padding top to avoid notch overlap) -->
+  <div v-else class="relative max-w-md mx-auto min-h-screen px-5 pb-36" style="padding-top: env(safe-area-inset-top);">
     <header class="mb-6 flex items-center justify-between sticky top-0 z-30 py-2 -mx-5 px-5" style="background: linear-gradient(to bottom, rgba(2,2,2,0.95), transparent);">
       <div class="flex items-center gap-3">
         <div class="relative">
           <div class="w-11 h-11 rounded-2xl glass flex items-center justify-center overflow-hidden p-1.5">
             <img src="https://lh3.googleusercontent.com/d/18vxkXZsFq2fF3HACl-FEBpcSI9vE37d6" alt="Logo" class="w-full h-full object-contain">
           </div>
-          <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full bg-[#B2D5E5] border-2 border-[#020202] pulse-ring"></div>
+          <div class="absolute -bottom-0.5 -right-0.5 w-3 h-3 rounded-full border-2 border-[#020202] pulse-ring" :style="`background-color: ${currentAccent};`"></div>
         </div>
         <div>
           <p class="text-[10px] uppercase tracking-[0.18em] text-white/40">MONITORING TRANS</p>
@@ -165,22 +147,23 @@
         <svg class="w-5 h-5 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
           <path stroke-linecap="round" stroke-linejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
         </svg>
-        <span v-if="activities.length > 0" class="absolute top-2 right-2.5 w-4 h-4 rounded-full bg-[#B2D5E5] border border-[#020202] text-[8px] font-bold text-[#020202] flex items-center justify-center font-display">{{ activities.length }}</span>
+        <span v-if="activities.length > 0" class="absolute top-2 right-2.5 w-4 h-4 rounded-full border border-[#020202] text-[8px] font-bold text-[#020202] flex items-center justify-center font-display" :style="`background-color: ${currentAccent};`">{{ activities.length }}</span>
       </button>
     </header>
 
     <div :key="activeTab" class="view-in">
       <!-- TRANS 1 -->
       <div v-if="activeTab === 0" class="space-y-4">
-        <div class="glass-strong rounded-3xl p-5 relative overflow-hidden shimmer-line">
+        <div class="glass-strong rounded-3xl p-5 relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-60% h-full pointer-events-none" style="background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); transform: translateX(-150%) skewX(-20deg); animation: shimmer 4s ease-in-out infinite;"></div>
           <div class="relative z-[2]">
             <div class="flex items-start justify-between">
               <div>
                 <p class="text-[10px] uppercase tracking-[0.2em] text-white/50 mb-1">EMBRIO KE PLB</p>
-                <h2 class="font-display text-[22px] font-bold leading-tight"><span class="bg-clip-text text-transparent" style="background-image:linear-gradient(135deg,#B2D5E5 0%,#fff 100%);">Transaksi Aktif</span></h2>
+                <h2 class="font-display text-[22px] font-bold leading-tight bg-clip-text text-transparent" :style="`background-image:linear-gradient(135deg, ${currentAccent} 0%, #fff 100%);`">Transaksi Aktif</h2>
               </div>
               <div class="text-right">
-                <p class="font-display text-2xl font-bold text-[#B2D5E5]">{{ trans1.length }}</p>
+                <p class="font-display text-2xl font-bold" :style="`color: ${currentAccent};`">{{ trans1.length }}</p>
                 <p class="text-[10px] text-white/40">total item</p>
               </div>
             </div>
@@ -193,13 +176,13 @@
         <div class="space-y-3">
           <div v-for="(item, i) in paginatedTrans1" :key="item.id" @click="openForm(item)" :class="{'fade-out': fadingOutId === item.id}" class="card-in glass rounded-2xl p-4 active:scale-[0.98] transition-transform cursor-pointer" :style="`animation-delay:${i*0.05}s`">
             <div class="flex items-start gap-3">
-              <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-[#B2D5E5]/10 text-[#B2D5E5]">
+              <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" :style="`background-color: ${currentAccent}1A; color: ${currentAccent};`">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
               </div>
               <div class="flex-1 min-w-0">
                 <div class="flex items-center justify-between gap-2 mb-2">
                   <p class="font-display text-base font-bold text-white truncate">{{ item.kode }}</p>
-                  <div class="flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-medium bg-[#B2D5E5]/10 text-[#B2D5E5] border border-[#B2D5E5]/15 flex-shrink-0">{{ item.rak }}</div>
+                  <div class="flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-medium flex-shrink-0" :style="`background-color: ${currentAccent}1A; color: ${currentAccent}; border: 1px solid ${currentAccent}26;`">{{ item.rak }}</div>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                   <div><p class="text-[9px] uppercase tracking-wider text-white/30">Tgl Monitor</p><p class="text-[11px] text-white/80 mt-0.5 font-medium">{{ item.tgl }}</p></div>
@@ -208,22 +191,23 @@
               </div>
             </div>
           </div>
-          <div v-if="isLoading1" class="py-5 flex justify-center"><div class="w-6 h-6 border-2 border-white/20 border-t-[#B2D5E5] rounded-full animate-spin"></div></div>
+          <div v-if="isLoading1" class="py-5 flex justify-center"><div class="w-6 h-6 border-2 border-white/20 rounded-full animate-spin" :style="`border-top-color: ${currentAccent};`"></div></div>
           <div v-observe="loadMore1" class="h-1 w-full"></div>
         </div>
       </div>
 
       <!-- TRANS 2 -->
       <div v-else-if="activeTab === 1" class="space-y-4">
-        <div class="glass-strong rounded-3xl p-5 relative overflow-hidden shimmer-line">
+        <div class="glass-strong rounded-3xl p-5 relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-60% h-full pointer-events-none" style="background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); transform: translateX(-150%) skewX(-20deg); animation: shimmer 4s ease-in-out infinite;"></div>
           <div class="relative z-[2]">
             <div class="flex items-start justify-between">
               <div>
                 <p class="text-[10px] uppercase tracking-[0.2em] text-white/50 mb-1">PLB KE PLANLET</p>
-                <h2 class="font-display text-[22px] font-bold leading-tight"><span class="bg-clip-text text-transparent" style="background-image:linear-gradient(135deg,#B2D5E5 0%,#fff 100%);">Transaksi Aktif</span></h2>
+                <h2 class="font-display text-[22px] font-bold leading-tight bg-clip-text text-transparent" :style="`background-image:linear-gradient(135deg, ${currentAccent} 0%, #fff 100%);`">Transaksi Aktif</h2>
               </div>
               <div class="text-right">
-                <p class="font-display text-2xl font-bold text-[#B2D5E5]">{{ trans2.length }}</p>
+                <p class="font-display text-2xl font-bold" :style="`color: ${currentAccent};`">{{ trans2.length }}</p>
                 <p class="text-[10px] text-white/40">total item</p>
               </div>
             </div>
@@ -236,13 +220,13 @@
         <div class="space-y-3">
           <div v-for="(item, i) in paginatedTrans2" :key="item.id" @click="openForm(item)" :class="{'fade-out': fadingOutId === item.id}" class="card-in glass rounded-2xl p-4 active:scale-[0.98] transition-transform cursor-pointer" :style="`animation-delay:${i*0.05}s`">
             <div class="flex items-start gap-3">
-              <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-[#B2D5E5]/10 text-[#B2D5E5]">
+              <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" :style="`background-color: ${currentAccent}1A; color: ${currentAccent};`">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg>
               </div>
               <div class="flex-1 min-w-0">
                 <div class="flex items-center justify-between gap-2 mb-2">
                   <p class="font-display text-base font-bold text-white truncate">{{ item.kode }}</p>
-                  <div class="flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-medium bg-[#B2D5E5]/10 text-[#B2D5E5] border border-[#B2D5E5]/15 flex-shrink-0">{{ item.rak }}</div>
+                  <div class="flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-medium flex-shrink-0" :style="`background-color: ${currentAccent}1A; color: ${currentAccent}; border: 1px solid ${currentAccent}26;`">{{ item.rak }}</div>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                   <div><p class="text-[9px] uppercase tracking-wider text-white/30">Tgl Monitor</p><p class="text-[11px] text-white/80 mt-0.5 font-medium">{{ item.tgl }}</p></div>
@@ -251,22 +235,23 @@
               </div>
             </div>
           </div>
-          <div v-if="isLoading2" class="py-5 flex justify-center"><div class="w-6 h-6 border-2 border-white/20 border-t-[#B2D5E5] rounded-full animate-spin"></div></div>
+          <div v-if="isLoading2" class="py-5 flex justify-center"><div class="w-6 h-6 border-2 border-white/20 rounded-full animate-spin" :style="`border-top-color: ${currentAccent};`"></div></div>
           <div v-observe="loadMore2" class="h-1 w-full"></div>
         </div>
       </div>
 
       <!-- TRANS 3 -->
       <div v-else-if="activeTab === 2" class="space-y-4">
-        <div class="glass-strong rounded-3xl p-5 relative overflow-hidden shimmer-line">
+        <div class="glass-strong rounded-3xl p-5 relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-60% h-full pointer-events-none" style="background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); transform: translateX(-150%) skewX(-20deg); animation: shimmer 4s ease-in-out infinite;"></div>
           <div class="relative z-[2]">
             <div class="flex items-start justify-between">
               <div>
                 <p class="text-[10px] uppercase tracking-[0.2em] text-white/50 mb-1">PLANLET KE AKLIM</p>
-                <h2 class="font-display text-[22px] font-bold leading-tight"><span class="bg-clip-text text-transparent" style="background-image:linear-gradient(135deg,#B2D5E5 0%,#fff 100%);">Botol Diproses</span></h2>
+                <h2 class="font-display text-[22px] font-bold leading-tight bg-clip-text text-transparent" :style="`background-image:linear-gradient(135deg, ${currentAccent} 0%, #fff 100%);`">Botol Diproses</h2>
               </div>
               <div class="text-right">
-                <p class="font-display text-2xl font-bold text-[#B2D5E5]">{{ totalBotol.toLocaleString('id-ID') }}</p>
+                <p class="font-display text-2xl font-bold" :style="`color: ${currentAccent};`">{{ totalBotol.toLocaleString('id-ID') }}</p>
                 <p class="text-[10px] text-white/40">total botol</p>
               </div>
             </div>
@@ -279,37 +264,38 @@
         <div class="space-y-3">
           <div v-for="(item, i) in paginatedTrans3" :key="item.id" @click="openForm(item)" :class="{'fade-out': fadingOutId === item.id}" class="card-in glass rounded-2xl p-4 active:scale-[0.98] transition-transform cursor-pointer" :style="`animation-delay:${i*0.05}s`">
             <div class="flex items-start gap-3">
-              <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 bg-[#B2D5E5]/10 text-[#B2D5E5]">
+              <div class="w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0" :style="`background-color: ${currentAccent}1A; color: ${currentAccent};`">
                 <svg class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M14.25 3.104v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M9.75 3.104c.251.023.501.05.75.082m4.5-.082c-.251.023-.501.05-.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" /></svg>
               </div>
               <div class="flex-1 min-w-0">
                 <div class="flex items-center justify-between gap-2 mb-2">
                   <p class="font-display text-base font-bold text-white truncate">{{ item.kode }}</p>
-                  <div class="flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-medium bg-[#B2D5E5]/10 text-[#B2D5E5] border border-[#B2D5E5]/15 flex-shrink-0">{{ item.rakBotol }}</div>
+                  <div class="flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-medium flex-shrink-0" :style="`background-color: ${currentAccent}1A; color: ${currentAccent}; border: 1px solid ${currentAccent}26;`">{{ item.rakBotol }}</div>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                   <div><p class="text-[9px] uppercase tracking-wider text-white/30">Tgl Monitor</p><p class="text-[11px] text-white/80 mt-0.5 font-medium">{{ item.tgl }}</p></div>
-                  <div><p class="text-[9px] uppercase tracking-wider text-white/30">Jml Botol</p><p class="text-[11px] text-[#B2D5E5] mt-0.5 font-display font-bold">{{ item.jmlBotol.toLocaleString('id-ID') }}</p></div>
+                  <div><p class="text-[9px] uppercase tracking-wider text-white/30">Jml Botol</p><p class="text-[11px] mt-0.5 font-display font-bold" :style="`color: ${currentAccent};`">{{ item.jmlBotol.toLocaleString('id-ID') }}</p></div>
                 </div>
               </div>
             </div>
           </div>
-          <div v-if="isLoading3" class="py-5 flex justify-center"><div class="w-6 h-6 border-2 border-white/20 border-t-[#B2D5E5] rounded-full animate-spin"></div></div>
+          <div v-if="isLoading3" class="py-5 flex justify-center"><div class="w-6 h-6 border-2 border-white/20 rounded-full animate-spin" :style="`border-top-color: ${currentAccent};`"></div></div>
           <div v-observe="loadMore3" class="h-1 w-full"></div>
         </div>
       </div>
 
       <!-- RESULT -->
       <div v-else-if="activeTab === 3" class="space-y-4">
-        <div class="glass-strong rounded-3xl p-5 relative overflow-hidden shimmer-line">
+        <div class="glass-strong rounded-3xl p-5 relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-60% h-full pointer-events-none" style="background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent); transform: translateX(-150%) skewX(-20deg); animation: shimmer 4s ease-in-out infinite;"></div>
           <div class="relative z-[2]">
             <div class="flex items-start justify-between">
               <div>
                 <p class="text-[10px] uppercase tracking-[0.2em] text-white/50 mb-1">HASIL MONITORING, RIWAYAT MONITORING</p>
-                <h2 class="font-display text-[22px] font-bold leading-tight"><span class="bg-clip-text text-transparent" style="background-image:linear-gradient(135deg,#B2D5E5 0%,#fff 100%);">Hasil Monitor</span></h2>
+                <h2 class="font-display text-[22px] font-bold leading-tight bg-clip-text text-transparent" :style="`background-image:linear-gradient(135deg, ${currentAccent} 0%, #fff 100%);`">Hasil Monitor</h2>
               </div>
               <div class="text-right">
-                <p class="font-display text-2xl font-bold text-[#B2D5E5]">{{ resultData.length }}</p>
+                <p class="font-display text-2xl font-bold" :style="`color: ${currentAccent};`">{{ resultData.length }}</p>
                 <p class="text-[10px] text-white/40">total QC</p>
               </div>
             </div>
@@ -329,7 +315,7 @@
               <div class="flex-1 min-w-0">
                 <div class="flex items-center justify-between gap-2 mb-2">
                   <p class="font-display text-base font-bold text-white truncate">{{ item.kode }}</p>
-                  <div class="flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-medium bg-[#B2D5E5]/10 text-[#B2D5E5] border border-[#B2D5E5]/15 flex-shrink-0">{{ item.rak }}</div>
+                  <div class="flex items-center gap-1.5 px-2 py-1 rounded-full text-[10px] font-medium flex-shrink-0" :style="`background-color: ${currentAccent}1A; color: ${currentAccent}; border: 1px solid ${currentAccent}26;`">{{ item.rak }}</div>
                 </div>
                 <div class="grid grid-cols-2 gap-2">
                   <div><p class="text-[9px] uppercase tracking-wider text-white/30">Periode</p><p class="text-[11px] text-white/80 mt-0.5 font-medium">{{ item.periode }}</p></div>
@@ -338,23 +324,23 @@
               </div>
             </div>
           </div>
-          <div v-if="isLoadingResult" class="py-5 flex justify-center"><div class="w-6 h-6 border-2 border-white/20 border-t-[#B2D5E5] rounded-full animate-spin"></div></div>
+          <div v-if="isLoadingResult" class="py-5 flex justify-center"><div class="w-6 h-6 border-2 border-white/20 rounded-full animate-spin" :style="`border-top-color: ${currentAccent};`"></div></div>
           <div v-observe="loadMoreResult" class="h-1 w-full"></div>
         </div>
       </div>
 
       <!-- PROFILE -->
       <div v-else-if="activeTab === 4" class="space-y-4">
-        <div class="glass-strong rounded-3xl p-6 relative overflow-hidden shimmer-line">
+        <div class="glass-strong rounded-3xl p-6 relative overflow-hidden">
           <div class="relative z-[2] flex flex-col items-center text-center">
             <div class="relative mb-4">
-              <div class="absolute inset-[-12px] rounded-full blur-2xl rotate-glow" style="background:conic-gradient(from 0deg, #B2D5E5, transparent, #B2D5E5); opacity:0.25;"></div>
-              <div class="relative w-24 h-24 rounded-full p-[2.5px]" style="background:linear-gradient(135deg,#B2D5E5,rgba(178,213,229,0.15));">
+              <div class="absolute inset-[-12px] rounded-full blur-2xl rotate-glow" :style="`background:conic-gradient(from 0deg, ${currentAccent}, transparent, ${currentAccent}); opacity:0.25;`"></div>
+              <div class="relative w-24 h-24 rounded-full p-[2.5px]" :style="`background:linear-gradient(135deg, ${currentAccent}, ${currentAccent}26);`">
                 <div class="w-full h-full rounded-full bg-[#020202] flex items-center justify-center">
-                  <span class="font-display font-bold text-3xl bg-clip-text text-transparent" style="background-image:linear-gradient(135deg,#B2D5E5,#fff);">{{ profileData.nama.charAt(0) }}</span>
+                  <span class="font-display font-bold text-3xl bg-clip-text text-transparent" :style="`background-image:linear-gradient(135deg, ${currentAccent}, #fff);`">{{ profileData.nama.charAt(0) }}</span>
                 </div>
               </div>
-              <div class="absolute bottom-0.5 right-0.5 w-5 h-5 rounded-full bg-[#B2D5E5] border-[3px] border-[#020202] pulse-ring"></div>
+              <div class="absolute bottom-0.5 right-0.5 w-5 h-5 rounded-full border-[3px] border-[#020202] pulse-ring" :style="`background-color: ${currentAccent};`"></div>
             </div>
             <h2 class="font-display text-xl font-bold mb-0.5">{{ profileData.nama }}</h2>
             <p class="text-sm text-white/50 mb-3">{{ profileData.jabatan }}</p>
@@ -363,32 +349,32 @@
         <div class="glass rounded-3xl overflow-hidden">
           <div class="flex items-center justify-between p-4 border-b border-white/[0.03]">
             <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(178,213,229,0.08);border:1px solid rgba(178,213,229,0.12);"><svg class="w-4 h-4 text-[#B2D5E5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg></div>
+              <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" :style="`background-color: ${currentAccent}1A; border: 1px solid ${currentAccent}26;`"><svg class="w-4 h-4" :style="`color: ${currentAccent};`" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" /></svg></div>
               <p class="text-sm font-medium text-white/70">Nama</p>
             </div>
             <p class="text-sm font-display font-semibold text-white">{{ profileData.nama }}</p>
           </div>
           <div class="flex items-center justify-between p-4 border-b border-white/[0.03]">
             <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(178,213,229,0.08);border:1px solid rgba(178,213,229,0.12);"><svg class="w-4 h-4 text-[#B2D5E5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" /></svg></div>
+              <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" :style="`background-color: ${currentAccent}1A; border: 1px solid ${currentAccent}26;`"><svg class="w-4 h-4" :style="`color: ${currentAccent};`" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M20.25 14.15v4.25c0 1.094-.787 2.036-1.872 2.18-2.087.277-4.216.42-6.378.42s-4.291-.143-6.378-.42c-1.085-.144-1.872-1.086-1.872-2.18v-4.25m16.5 0a2.18 2.18 0 00.75-1.661V8.706c0-1.081-.768-2.015-1.837-2.175a48.114 48.114 0 00-3.413-.387m4.5 8.006c-.194.165-.42.295-.673.38A23.978 23.978 0 0112 15.75c-2.648 0-5.195-.429-7.577-1.22a2.016 2.016 0 01-.673-.38m0 0A2.18 2.18 0 013 12.489V8.706c0-1.081.768-2.015 1.837-2.175a48.111 48.111 0 013.413-.387m7.5 0V5.25A2.25 2.25 0 0013.5 3h-3a2.25 2.25 0 00-2.25 2.25v.894m7.5 0a48.667 48.667 0 00-7.5 0M12 12.75h.008v.008H12v-.008z" /></svg></div>
               <p class="text-sm font-medium text-white/70">Jabatan</p>
             </div>
             <p class="text-sm font-display font-semibold text-white">{{ profileData.jabatan }}</p>
           </div>
           <div class="flex items-center justify-between p-4 border-b border-white/[0.03]">
             <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(178,213,229,0.08);border:1px solid rgba(178,213,229,0.12);"><svg class="w-4 h-4 text-[#B2D5E5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM3 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 019.374 21c-2.331 0-4.512-.645-6.374-1.766z" /></svg></div>
+              <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" :style="`background-color: ${currentAccent}1A; border: 1px solid ${currentAccent}26;`"><svg class="w-4 h-4" :style="`color: ${currentAccent};`" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M18 7.5v3m0 0v3m0-3h3m-3 0h-3m-2.25-4.125a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zM3 19.235v-.11a6.375 6.375 0 0112.75 0v.109A12.318 12.318 0 019.374 21c-2.331 0-4.512-.645-6.374-1.766z" /></svg></div>
               <p class="text-sm font-medium text-white/70">Username</p>
             </div>
             <p class="text-sm font-display font-semibold text-white">{{ profileData.username }}</p>
           </div>
           <div class="flex items-center justify-between p-4">
             <div class="flex items-center gap-3">
-              <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" style="background:rgba(178,213,229,0.08);border:1px solid rgba(178,213,229,0.12);"><svg class="w-4 h-4 text-[#B2D5E5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg></div>
+              <div class="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0" :style="`background-color: ${currentAccent}1A; border: 1px solid ${currentAccent}26;`"><svg class="w-4 h-4" :style="`color: ${currentAccent};`" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6A2.25 2.25 0 016 3.75h2.25A2.25 2.25 0 0110.5 6v2.25a2.25 2.25 0 01-2.25 2.25H6a2.25 2.25 0 01-2.25-2.25V6zM3.75 15.75A2.25 2.25 0 016 13.5h2.25a2.25 2.25 0 012.25 2.25V18a2.25 2.25 0 01-2.25 2.25H6A2.25 2.25 0 013.75 18v-2.25zM13.5 6a2.25 2.25 0 012.25-2.25H18A2.25 2.25 0 0120.25 6v2.25A2.25 2.25 0 0118 10.5h-2.25a2.25 2.25 0 01-2.25-2.25V6zM13.5 15.75a2.25 2.25 0 012.25-2.25H18a2.25 2.25 0 012.25 2.25V18A2.25 2.25 0 0118 20.25h-2.25A2.25 2.25 0 0113.5 18v-2.25z" /></svg></div>
               <p class="text-sm font-medium text-white/70">Akses Tab</p>
             </div>
             <div class="flex gap-1.5">
-              <span v-for="tab in profileData.tab.split(',')" :key="tab" class="text-[10px] font-display font-semibold px-2 py-1 rounded-md text-[#B2D5E5] bg-[#B2D5E5]/10 border border-[#B2D5E5]/15">{{ tab.trim() }}</span>
+              <span v-for="tab in profileData.tab.split(',')" :key="tab" class="text-[10px] font-display font-semibold px-2 py-1 rounded-md" :style="`color: ${currentAccent}; background-color: ${currentAccent}1A; border: 1px solid ${currentAccent}26;`">{{ tab.trim() }}</span>
             </div>
           </div>
         </div>
@@ -400,17 +386,17 @@
     </div>
 
     <div class="text-center mt-10 mb-4">
-      <p class="text-[10px] text-white/30">Dibangun oleh <span class="font-display font-medium text-[#B2D5E5]">RADEXA Solutions</span></p>
+      <p class="text-[10px] text-white/30">Dibangun oleh <span class="font-display font-medium" :style="`color: ${currentAccent};`">RADEXA Solutions</span></p>
       <p class="text-[9px] text-white/20 mt-1">© 2024 All Rights Reserved</p>
     </div>
   </div>
 
-  <nav v-if="isLoggedIn" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md safe-bottom px-4 pb-4 z-50">
+  <nav v-if="isLoggedIn" class="fixed bottom-0 left-1/2 -translate-x-1/2 w-full max-w-md px-4 pb-4 z-50" style="padding-bottom: env(safe-area-inset-bottom);">
     <div class="glass-strong rounded-3xl px-2 py-2 flex items-center justify-between relative">
       <button v-for="i in visibleTabs" :key="i" @click="activeTab = i" class="relative flex flex-col items-center justify-center gap-1 flex-1 py-2.5 active:scale-90 transition-all duration-300 no-select">
-        <div v-if="activeTab === i" class="absolute top-0 left-1/2 -translate-x-1/2 w-7 h-[2px] rounded-full bg-[#B2D5E5]" style="box-shadow:0 0 10px rgba(178,213,229,0.6);"></div>
-        <svg class="w-[20px] h-[20px] transition-all duration-300" :class="activeTab === i ? 'text-[#B2D5E5]' : 'text-white/35'" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" v-html="tabs[i].icon"></svg>
-        <span class="text-[9px] font-medium transition-all duration-300 font-display tracking-wide" :class="activeTab === i ? 'text-[#B2D5E5]' : 'text-white/35'">{{ tabs[i].name }}</span>
+        <div v-if="activeTab === i" class="absolute top-0 left-1/2 -translate-x-1/2 w-7 h-[2px] rounded-full" :style="`background-color: ${currentAccent}; box-shadow: 0 0 10px ${currentAccent};`"></div>
+        <svg class="w-[20px] h-[20px] transition-all duration-300" :style="`color: ${activeTab === i ? currentAccent : 'rgba(255,255,255,0.35)'}`" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5" v-html="tabs[i].icon"></svg>
+        <span class="text-[9px] font-medium transition-all duration-300 font-display tracking-wide" :style="`color: ${activeTab === i ? currentAccent : 'rgba(255,255,255,0.35)'}`">{{ tabs[i].name }}</span>
       </button>
     </div>
   </nav>
@@ -418,14 +404,14 @@
   <!-- MODAL FORM -->
   <transition name="modal">
     <div v-if="showForm" class="fixed inset-0 z-[100] flex items-end justify-center">
-      <div class="absolute inset-0 bg-black/70 backdrop-blur-md sheet-backdrop" :style="{ opacity: backdropOpacity }" @click="closeForm"></div>
-      <div class="relative w-full max-w-md glass-strong rounded-t-3xl max-h-[92vh] overflow-y-auto slide-up pb-10 sheet-content" style="box-shadow: 0 -10px 40px rgba(0,0,0,0.5); transform: translateY(${sheetTranslate}px);" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">
+      <div class="absolute inset-0 bg-black/70 backdrop-blur-md sheet-backdrop" ref="formBackdrop" @click="closeForm"></div>
+      <div class="relative w-full max-w-md glass-strong rounded-t-3xl max-h-[92vh] overflow-y-auto slide-up pb-10 sheet-content" ref="formSheet" style="box-shadow: 0 -10px 40px rgba(0,0,0,0.5);" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">
         <div class="sticky top-0 z-10 glass-strong rounded-t-3xl pb-3 pt-3 px-5 mb-4" style="background: linear-gradient(to bottom, rgba(10,15,20,0.98) 60%, rgba(10,15,20,0.8) 80%, transparent 100%);">
-          <div class="w-12 h-1.5 bg-[#B2D5E5]/30 rounded-full mx-auto mb-3 cursor-grab"></div>
+          <div class="w-12 h-1.5 rounded-full mx-auto mb-3 cursor-grab" :style="`background-color: ${currentAccent}4D;`"></div>
           <p class="text-center text-[9px] uppercase tracking-widest text-white/30 mb-3">Geser ke bawah untuk menutup</p>
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-[10px] uppercase tracking-[0.18em] text-[#B2D5E5]">Form Monitoring</p>
+              <p class="text-[10px] uppercase tracking-[0.18em]" :style="`color: ${currentAccent};`">Form Monitoring</p>
               <h2 class="font-display text-lg font-bold">Input Data {{ activeTab === 2 ? 'Packaging' : 'Tanaman' }}</h2>
             </div>
             <button @click="closeForm" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center active:scale-90 transition-transform no-select">
@@ -437,7 +423,7 @@
           <div class="grid grid-cols-2 gap-3">
             <div class="glass rounded-2xl p-3.5 border border-white/5">
               <p class="text-[9px] uppercase tracking-wider text-white/40 mb-1">{{ activeTab === 2 ? 'Kode Kebun' : 'Kode Project' }}</p>
-              <p class="font-display text-sm font-semibold text-[#B2D5E5]">{{ formData.kode }}</p>
+              <p class="font-display text-sm font-semibold" :style="`color: ${currentAccent};`">{{ formData.kode }}</p>
             </div>
             <div class="glass rounded-2xl p-3.5 border border-white/5">
               <p class="text-[9px] uppercase tracking-wider text-white/40 mb-1">{{ activeTab === 2 ? 'Rak Botol' : 'Periode' }}</p>
@@ -454,22 +440,22 @@
               </button>
               <transition name="modal">
                 <div v-if="dropdownOpen" class="absolute top-full mt-2 w-full glass-strong rounded-2xl p-2 z-20 space-y-1">
-                  <button v-for="opt in pertumbuhanOptions" :key="opt" @click="formData.pertumbuhan = opt; dropdownOpen = false; formErrors.pertumbuhan = false" class="w-full text-left px-4 py-3 rounded-xl text-sm transition-all active:scale-[0.98] no-select" :class="formData.pertumbuhan === opt ? 'bg-[#B2D5E5]/10 text-[#B2D5E5]' : 'text-white/70 hover:bg-white/5'">{{ opt }}</button>
+                  <button v-for="opt in pertumbuhanOptions" :key="opt" @click="formData.pertumbuhan = opt; dropdownOpen = false; formErrors.pertumbuhan = false" class="w-full text-left px-4 py-3 rounded-xl text-sm transition-all active:scale-[0.98] no-select" :style="formData.pertumbuhan === opt ? `background-color: ${currentAccent}1A; color: ${currentAccent};` : 'color: rgba(255,255,255,0.7)'">{{ opt }}</button>
                 </div>
               </transition>
             </div>
             <div>
               <label class="text-[10px] uppercase tracking-wider mb-2 block font-display" :class="formErrors.jumlah ? 'text-rose-300' : 'text-white/50'">Jumlah Planlet / PLB <span class="text-rose-400">*</span></label>
               <div class="grid grid-cols-2 gap-2 p-1.5 glass-input rounded-2xl" :class="{'error-border': formErrors.jumlah}">
-                <button v-for="opt in jumlahOptions" :key="opt" @click="formData.jumlah = opt; formErrors.jumlah = false" class="py-3 rounded-xl text-sm font-medium transition-all active:scale-95 no-select" :class="formData.jumlah === opt ? 'bg-[#B2D5E5] text-[#020202] shadow-[0_0_15px_rgba(178,213,229,0.4)]' : 'text-white/50'">{{ opt }}</button>
+                <button v-for="opt in jumlahOptions" :key="opt" @click="formData.jumlah = opt; formErrors.jumlah = false" class="py-3 rounded-xl text-sm font-medium transition-all active:scale-95 no-select" :style="formData.jumlah === opt ? `background-color: ${currentAccent}; color: #020202; box-shadow: 0 0 15px ${currentAccent}66;` : 'color: rgba(255,255,255,0.5)'">{{ opt }}</button>
               </div>
             </div>
             <div>
               <div class="flex items-center justify-between mb-3">
-                <label class="text-[10px] uppercase tracking-wider font-display" :class="formErrors.presentase ? 'text-rose-300' : 'text-white/50'">Presentase <span class="text-rose-400">*</span></label>
-                <span class="font-display text-base font-bold text-[#B2D5E5]">{{ formData.presentase }}%</span>
+                <label class="text-[10px] uppercase tracking-wider font-display text-white/50">Presentase <span class="text-rose-400">*</span></label>
+                <span class="font-display text-base font-bold" :style="`color: ${currentAccent};`">{{ formData.presentase }}%</span>
               </div>
-              <input type="range" min="0" max="100" step="5" v-model="formData.presentase" @input="formErrors.presentase = false" class="custom-slider" :style="`background: linear-gradient(to right, #B2D5E5 0%, #B2D5E5 ${formData.presentase}%, rgba(255,255,255,0.1) ${formData.presentase}%, rgba(255,255,255,0.1) 100%)`">
+              <input type="range" min="0" max="100" step="5" v-model="formData.presentase" class="custom-slider" :style="`background: linear-gradient(to right, ${currentAccent} 0%, ${currentAccent} ${formData.presentase}%, rgba(255,255,255,0.1) ${formData.presentase}%, rgba(255,255,255,0.1) 100%)`">
             </div>
             <div>
               <label class="text-[10px] uppercase tracking-wider text-white/50 mb-2 block font-display">Keterangan Kondisi (Otomatis)</label>
@@ -481,8 +467,8 @@
             <div>
               <label class="text-[10px] uppercase tracking-wider mb-2 block font-display" :class="formErrors.status ? 'text-rose-300' : 'text-white/50'">Status <span class="text-rose-400">*</span></label>
               <div class="grid grid-cols-2 gap-2 p-1.5 glass-input rounded-2xl" :class="{'error-border': formErrors.status}">
-                <button @click="formData.status = 'PENDING'; formErrors.status = false" class="py-3 rounded-xl text-sm font-medium transition-all active:scale-95 no-select flex items-center justify-center gap-2" :class="formData.status === 'PENDING' ? 'bg-amber-400/20 text-amber-300 shadow-[0_0_15px_rgba(251,191,36,0.2)]' : 'text-white/50'"><div class="w-1.5 h-1.5 rounded-full" :class="formData.status === 'PENDING' ? 'bg-amber-400' : 'bg-white/30'"></div>Pending</button>
-                <button @click="formData.status = 'BERHASIL'; formErrors.status = false" class="py-3 rounded-xl text-sm font-medium transition-all active:scale-95 no-select flex items-center justify-center gap-2" :class="formData.status === 'BERHASIL' ? 'bg-emerald-400/20 text-emerald-300 shadow-[0_0_15px_rgba(52,211,153,0.2)]' : 'text-white/50'"><div class="w-1.5 h-1.5 rounded-full" :class="formData.status === 'BERHASIL' ? 'bg-emerald-400' : 'bg-white/30'"></div>Berhasil</button>
+                <button @click="formData.status = 'PENDING'; formErrors.status = false" class="py-3 rounded-xl text-sm font-medium transition-all active:scale-95 no-select flex items-center justify-center gap-2" :style="formData.status === 'PENDING' ? 'background-color: rgba(251,191,36,0.2); color: #fcd34d; box-shadow: 0 0 15px rgba(251,191,36,0.2);' : 'color: rgba(255,255,255,0.5)'"><div class="w-1.5 h-1.5 rounded-full" :style="formData.status === 'PENDING' ? 'background-color: #fbbf24;' : 'background-color: rgba(255,255,255,0.3);'"></div>Pending</button>
+                <button @click="formData.status = 'BERHASIL'; formErrors.status = false" class="py-3 rounded-xl text-sm font-medium transition-all active:scale-95 no-select flex items-center justify-center gap-2" :style="formData.status === 'BERHASIL' ? 'background-color: rgba(52,211,153,0.2); color: #6ee7b7; box-shadow: 0 0 15px rgba(52,211,153,0.2);' : 'color: rgba(255,255,255,0.5)'"><div class="w-1.5 h-1.5 rounded-full" :style="formData.status === 'BERHASIL' ? 'background-color: #34d399;' : 'background-color: rgba(255,255,255,0.3);'"></div>Berhasil</button>
               </div>
             </div>
           </template>
@@ -495,9 +481,9 @@
             <div>
               <label class="text-[10px] uppercase tracking-wider mb-2 block font-display" :class="formErrors.jmlBotol ? 'text-rose-300' : 'text-white/50'">Jumlah Botol <span class="text-rose-400">*</span></label>
               <div class="glass-input rounded-2xl flex items-center justify-between p-2" :class="{'error-border': formErrors.jmlBotol}">
-                <button @click="formData.jmlBotol = Math.max(0, formData.jmlBotol - 1); formErrors.jmlBotol = false" class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center active:scale-90 transition-transform no-select"><svg class="w-5 h-5 text-[#B2D5E5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" /></svg></button>
+                <button @click="formData.jmlBotol = Math.max(0, formData.jmlBotol - 1); formErrors.jmlBotol = false" class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center active:scale-90 transition-transform no-select"><svg class="w-5 h-5" :style="`color: ${currentAccent};`" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" /></svg></button>
                 <input type="number" v-model.number="formData.jmlBotol" @input="formErrors.jmlBotol = false" class="bg-transparent text-center w-full outline-none text-white font-display font-bold text-xl">
-                <button @click="formData.jmlBotol = formData.jmlBotol + 1; formErrors.jmlBotol = false" class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center active:scale-90 transition-transform no-select"><svg class="w-5 h-5 text-[#B2D5E5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg></button>
+                <button @click="formData.jmlBotol = formData.jmlBotol + 1; formErrors.jmlBotol = false" class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center active:scale-90 transition-transform no-select"><svg class="w-5 h-5" :style="`color: ${currentAccent};`" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg></button>
               </div>
             </div>
             <div>
@@ -507,25 +493,25 @@
             <div>
               <label class="text-[10px] uppercase tracking-wider mb-2 block font-display" :class="formErrors.status ? 'text-rose-300' : 'text-white/50'">Status <span class="text-rose-400">*</span></label>
               <div class="grid grid-cols-3 gap-2 p-1.5 glass-input rounded-2xl" :class="{'error-border': formErrors.status}">
-                <button @click="formData.status = 'PENDING'; formErrors.status = false" class="py-3 rounded-xl text-xs font-medium transition-all active:scale-95 no-select flex items-center justify-center gap-1.5" :class="formData.status === 'PENDING' ? 'bg-amber-400/20 text-amber-300 shadow-[0_0_15px_rgba(251,191,36,0.2)]' : 'text-white/50'"><div class="w-1.5 h-1.5 rounded-full" :class="formData.status === 'PENDING' ? 'bg-amber-400' : 'bg-white/30'"></div>Pending</button>
-                <button @click="formData.status = 'BERHASIL'; formErrors.status = false" class="py-3 rounded-xl text-xs font-medium transition-all active:scale-95 no-select flex items-center justify-center gap-1.5" :class="formData.status === 'BERHASIL' ? 'bg-emerald-400/20 text-emerald-300 shadow-[0_0_15px_rgba(52,211,153,0.2)]' : 'text-white/50'"><div class="w-1.5 h-1.5 rounded-full" :class="formData.status === 'BERHASIL' ? 'bg-emerald-400' : 'bg-white/30'"></div>Berhasil</button>
-                <button @click="formData.status = 'GAGAL'; formErrors.status = false" class="py-3 rounded-xl text-xs font-medium transition-all active:scale-95 no-select flex items-center justify-center gap-1.5" :class="formData.status === 'GAGAL' ? 'bg-rose-400/20 text-rose-300 shadow-[0_0_15px_rgba(244,63,94,0.2)]' : 'text-white/50'"><div class="w-1.5 h-1.5 rounded-full" :class="formData.status === 'GAGAL' ? 'bg-rose-400' : 'bg-white/30'"></div>Gagal</button>
+                <button @click="formData.status = 'PENDING'; formErrors.status = false" class="py-3 rounded-xl text-xs font-medium transition-all active:scale-95 no-select flex items-center justify-center gap-1.5" :style="formData.status === 'PENDING' ? 'background-color: rgba(251,191,36,0.2); color: #fcd34d; box-shadow: 0 0 15px rgba(251,191,36,0.2);' : 'color: rgba(255,255,255,0.5)'"><div class="w-1.5 h-1.5 rounded-full" :style="formData.status === 'PENDING' ? 'background-color: #fbbf24;' : 'background-color: rgba(255,255,255,0.3);'"></div>Pending</button>
+                <button @click="formData.status = 'BERHASIL'; formErrors.status = false" class="py-3 rounded-xl text-xs font-medium transition-all active:scale-95 no-select flex items-center justify-center gap-1.5" :style="formData.status === 'BERHASIL' ? 'background-color: rgba(52,211,153,0.2); color: #6ee7b7; box-shadow: 0 0 15px rgba(52,211,153,0.2);' : 'color: rgba(255,255,255,0.5)'"><div class="w-1.5 h-1.5 rounded-full" :style="formData.status === 'BERHASIL' ? 'background-color: #34d399;' : 'background-color: rgba(255,255,255,0.3);'"></div>Berhasil</button>
+                <button @click="formData.status = 'GAGAL'; formErrors.status = false" class="py-3 rounded-xl text-xs font-medium transition-all active:scale-95 no-select flex items-center justify-center gap-1.5" :style="formData.status === 'GAGAL' ? 'background-color: rgba(244,63,94,0.2); color: #fda4af; box-shadow: 0 0 15px rgba(244,63,94,0.2);' : 'color: rgba(255,255,255,0.5)'"><div class="w-1.5 h-1.5 rounded-full" :style="formData.status === 'GAGAL' ? 'background-color: #f43f5e;' : 'background-color: rgba(255,255,255,0.3);'"></div>Gagal</button>
               </div>
             </div>
             <div>
               <label class="text-[10px] uppercase tracking-wider text-white/50 mb-2 block font-display">Rek. Pembesaran</label>
               <div class="glass-input rounded-2xl flex items-center justify-between p-2">
-                <button @click="formData.rekPembesaran = Math.max(0, formData.rekPembesaran - 1)" class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center active:scale-90 transition-transform no-select"><svg class="w-5 h-5 text-[#B2D5E5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" /></svg></button>
+                <button @click="formData.rekPembesaran = Math.max(0, formData.rekPembesaran - 1)" class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center active:scale-90 transition-transform no-select"><svg class="w-5 h-5" :style="`color: ${currentAccent};`" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" /></svg></button>
                 <input type="number" v-model.number="formData.rekPembesaran" class="bg-transparent text-center w-full outline-none text-white font-display font-bold text-xl">
-                <button @click="formData.rekPembesaran = formData.rekPembesaran + 1" class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center active:scale-90 transition-transform no-select"><svg class="w-5 h-5 text-[#B2D5E5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg></button>
+                <button @click="formData.rekPembesaran = formData.rekPembesaran + 1" class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center active:scale-90 transition-transform no-select"><svg class="w-5 h-5" :style="`color: ${currentAccent};`" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg></button>
               </div>
             </div>
             <div>
               <label class="text-[10px] uppercase tracking-wider text-white/50 mb-2 block font-display">Rek. Penjualan</label>
               <div class="glass-input rounded-2xl flex items-center justify-between p-2">
-                <button @click="formData.rekPenjualan = Math.max(0, formData.rekPenjualan - 1)" class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center active:scale-90 transition-transform no-select"><svg class="w-5 h-5 text-[#B2D5E5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" /></svg></button>
+                <button @click="formData.rekPenjualan = Math.max(0, formData.rekPenjualan - 1)" class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center active:scale-90 transition-transform no-select"><svg class="w-5 h-5" :style="`color: ${currentAccent};`" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 12h14" /></svg></button>
                 <input type="number" v-model.number="formData.rekPenjualan" class="bg-transparent text-center w-full outline-none text-white font-display font-bold text-xl">
-                <button @click="formData.rekPenjualan = formData.rekPenjualan + 1" class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center active:scale-90 transition-transform no-select"><svg class="w-5 h-5 text-[#B2D5E5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg></button>
+                <button @click="formData.rekPenjualan = formData.rekPenjualan + 1" class="w-12 h-12 rounded-xl bg-white/5 flex items-center justify-center active:scale-90 transition-transform no-select"><svg class="w-5 h-5" :style="`color: ${currentAccent};`" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" /></svg></button>
               </div>
             </div>
           </template>
@@ -534,7 +520,7 @@
             <label class="text-[10px] uppercase tracking-wider mb-2 block font-display" :class="formErrors.foto ? 'text-rose-300' : 'text-white/50'">Ambil Foto <span class="text-rose-400">*</span></label>
             <input type="file" accept="image/*" capture="environment" @change="handleFoto" ref="fileInput" class="hidden">
             <div v-if="!fotoPreview" @click="$refs.fileInput.click()" class="glass-input rounded-2xl border-dashed border p-6 flex flex-col items-center justify-center gap-3 active:scale-[0.98] transition-all cursor-pointer no-select" :class="formErrors.foto ? 'error-border border-rose-400/30' : 'border-white/15'">
-              <div class="w-14 h-14 rounded-2xl bg-[#B2D5E5]/10 flex items-center justify-center"><svg class="w-7 h-7 text-[#B2D5E5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" /><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" /></svg></div>
+              <div class="w-14 h-14 rounded-2xl flex items-center justify-center" :style="`background-color: ${currentAccent}1A;`"><svg class="w-7 h-7" :style="`color: ${currentAccent};`" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 015.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 002.25 2.25h15A2.25 2.25 0 0021.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 00-1.134-.175 2.31 2.31 0 01-1.64-1.055l-.822-1.316a2.192 2.192 0 00-1.736-1.039 48.774 48.774 0 00-5.232 0 2.192 2.192 0 00-1.736 1.039l-.821 1.316z" /><path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 11-9 0 4.5 4.5 0 019 0zM18.75 10.5h.008v.008h-.008V10.5z" /></svg></div>
               <div class="text-center"><p class="text-sm text-white/80 font-medium">Buka Kamera</p><p class="text-[10px] text-white/40 mt-1">Ketuk untuk mengambil foto langsung</p></div>
             </div>
             <div v-else class="relative rounded-2xl overflow-hidden active:scale-[0.98] transition-all cursor-pointer" @click="$refs.fileInput.click()">
@@ -542,11 +528,11 @@
               <div class="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent"></div>
               <div class="absolute bottom-4 left-4 right-4 flex items-center justify-between">
                 <span class="text-xs text-white/90 px-3 py-1.5 rounded-lg bg-black/50 backdrop-blur-md font-medium">Foto Terunggah</span>
-                <div class="w-9 h-9 rounded-full bg-[#B2D5E5]/20 backdrop-blur-md flex items-center justify-center border border-[#B2D5E5]/30"><svg class="w-4 h-4 text-[#B2D5E5]" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" /></svg></div>
+                <div class="w-9 h-9 rounded-full backdrop-blur-md flex items-center justify-center" :style="`background-color: ${currentAccent}33; border: 1px solid ${currentAccent}4D;`"><svg class="w-4 h-4" :style="`color: ${currentAccent};`" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5"><path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" /></svg></div>
               </div>
             </div>
           </div>
-          <button @click="submitForm" class="w-full bg-[#B2D5E5] text-[#020202] font-display font-bold text-sm py-4 rounded-2xl active:scale-95 transition-all duration-300 no-select mt-4 flex items-center justify-center gap-2" style="box-shadow: 0 0 25px rgba(178,213,229,0.3);">
+          <button @click="submitForm" class="w-full text-[#020202] font-display font-bold text-sm py-4 rounded-2xl active:scale-95 transition-all duration-300 no-select mt-4 flex items-center justify-center gap-2" :style="`background-color: ${currentAccent}; box-shadow: 0 0 25px ${currentAccent}80;`">
             <span>Simpan Data Monitoring</span>
           </button>
         </div>
@@ -557,14 +543,14 @@
   <!-- MODAL RESULT DETAIL -->
   <transition name="modal">
     <div v-if="showResultModal" class="fixed inset-0 z-[100] flex items-end justify-center">
-      <div class="absolute inset-0 bg-black/70 backdrop-blur-md sheet-backdrop" :style="{ opacity: backdropOpacity }" @click="showResultModal = false"></div>
-      <div class="relative w-full max-w-md glass-strong rounded-t-3xl max-h-[85vh] overflow-y-auto slide-up pb-10 sheet-content" style="box-shadow: 0 -10px 40px rgba(0,0,0,0.5); transform: translateY(${sheetTranslate}px);" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">
+      <div class="absolute inset-0 bg-black/70 backdrop-blur-md sheet-backdrop" ref="resultBackdrop" @click="showResultModal = false"></div>
+      <div class="relative w-full max-w-md glass-strong rounded-t-3xl max-h-[85vh] overflow-y-auto slide-up pb-10 sheet-content" ref="resultSheet" style="box-shadow: 0 -10px 40px rgba(0,0,0,0.5);" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">
         <div class="sticky top-0 z-10 glass-strong rounded-t-3xl pb-3 pt-3 px-5 mb-4" style="background: linear-gradient(to bottom, rgba(10,15,20,0.98) 60%, rgba(10,15,20,0.8) 80%, transparent 100%);">
-          <div class="w-12 h-1.5 bg-[#B2D5E5]/30 rounded-full mx-auto mb-3 cursor-grab"></div>
+          <div class="w-12 h-1.5 rounded-full mx-auto mb-3 cursor-grab" :style="`background-color: ${currentAccent}4D;`"></div>
           <p class="text-center text-[9px] uppercase tracking-widest text-white/30 mb-3">Geser ke bawah untuk menutup</p>
           <div class="flex items-center justify-between">
             <div>
-              <p class="text-[10px] uppercase tracking-[0.18em] text-[#B2D5E5]">Detail Hasil Monitor</p>
+              <p class="text-[10px] uppercase tracking-[0.18em]" :style="`color: ${currentAccent};`">Detail Hasil Monitor</p>
               <h2 class="font-display text-lg font-bold truncate">{{ resultDetailData.kode }}</h2>
             </div>
             <button @click="showResultModal = false" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center active:scale-90 transition-transform no-select">
@@ -588,7 +574,7 @@
             </div>
             <div class="glass rounded-2xl p-3.5 border border-white/5">
               <p class="text-[9px] uppercase tracking-wider text-white/40 mb-1">Rak</p>
-              <p class="font-display text-sm font-semibold text-[#B2D5E5]">{{ resultDetailData.rak }}</p>
+              <p class="font-display text-sm font-semibold" :style="`color: ${currentAccent};`">{{ resultDetailData.rak }}</p>
             </div>
             <div class="glass rounded-2xl p-3.5 border border-white/5">
               <p class="text-[9px] uppercase tracking-wider text-white/40 mb-1">Status</p>
@@ -611,13 +597,13 @@
   <!-- MODAL ACTIVITY -->
   <transition name="modal">
     <div v-if="showActivityModal" class="fixed inset-0 z-[100] flex items-end justify-center">
-      <div class="absolute inset-0 bg-black/70 backdrop-blur-md sheet-backdrop" :style="{ opacity: backdropOpacity }" @click="showActivityModal = false"></div>
-      <div class="relative w-full max-w-md glass-strong rounded-t-3xl max-h-[80vh] overflow-y-auto slide-up pb-10 sheet-content" style="box-shadow: 0 -10px 40px rgba(0,0,0,0.5); transform: translateY(${sheetTranslate}px);" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">
+      <div class="absolute inset-0 bg-black/70 backdrop-blur-md sheet-backdrop" ref="activityBackdrop" @click="showActivityModal = false"></div>
+      <div class="relative w-full max-w-md glass-strong rounded-t-3xl max-h-[80vh] overflow-y-auto slide-up pb-10 sheet-content" ref="activitySheet" style="box-shadow: 0 -10px 40px rgba(0,0,0,0.5);" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">
         <div class="sticky top-0 z-10 glass-strong rounded-t-3xl pb-3 pt-3 px-5 mb-4" style="background: linear-gradient(to bottom, rgba(10,15,20,0.98) 60%, rgba(10,15,20,0.8) 80%, transparent 100%);">
-          <div class="w-12 h-1.5 bg-[#B2D5E5]/30 rounded-full mx-auto mb-3 cursor-grab"></div>
+          <div class="w-12 h-1.5 rounded-full mx-auto mb-3 cursor-grab" :style="`background-color: ${currentAccent}4D;`"></div>
           <p class="text-center text-[9px] uppercase tracking-widest text-white/30 mb-3">Geser ke bawah untuk menutup</p>
           <div class="flex items-center justify-between">
-            <div><p class="text-[10px] uppercase tracking-[0.18em] text-[#B2D5E5]">Riwayat</p><h2 class="font-display text-lg font-bold">Aktivitas Terbaru</h2></div>
+            <div><p class="text-[10px] uppercase tracking-[0.18em]" :style="`color: ${currentAccent};`">Riwayat</p><h2 class="font-display text-lg font-bold">Aktivitas Terbaru</h2></div>
             <button @click="showActivityModal = false" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center active:scale-90 transition-transform no-select"><svg class="w-4 h-4 text-white/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2.5"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg></button>
           </div>
         </div>
@@ -631,8 +617,8 @@
                 <span class="text-[10px] font-display font-semibold px-2 py-0.5 rounded-md" :class="act.status === 'BERHASIL' ? 'text-emerald-300 bg-emerald-400/10' : act.status === 'PENDING' ? 'text-amber-300 bg-amber-400/10' : 'text-rose-300 bg-rose-400/10'">{{ act.status }}</span>
               </div>
               <div class="flex flex-col mt-1 gap-0.5">
-                <p class="text-[11px] text-white/60">Periode: <span class="text-[#B2D5E5] font-medium">{{ act.periode }}</span></p>
-                <p class="text-[11px] text-white/60">{{ act.label }}: <span class="text-[#B2D5E5] font-medium">{{ act.value }}</span></p>
+                <p class="text-[11px] text-white/60">Periode: <span class="font-medium" :style="`color: ${currentAccent};`">{{ act.periode }}</span></p>
+                <p class="text-[11px] text-white/60">{{ act.label }}: <span class="font-medium" :style="`color: ${currentAccent};`">{{ act.value }}</span></p>
                 <p class="text-[10px] text-white/40 font-display mt-0.5">{{ act.waktu }}</p>
               </div>
             </div>
@@ -645,10 +631,10 @@
   <!-- MODAL LOGOUT CONFIRMATION -->
   <transition name="modal">
     <div v-if="showLogoutModal" class="fixed inset-0 z-[100] flex items-end justify-center">
-      <div class="absolute inset-0 bg-black/70 backdrop-blur-md sheet-backdrop" :style="{ opacity: backdropOpacity }" @click="showLogoutModal = false"></div>
-      <div class="relative w-full max-w-md glass-strong rounded-t-3xl max-h-[50vh] overflow-y-auto slide-up pb-10 sheet-content" style="box-shadow: 0 -10px 40px rgba(0,0,0,0.5); transform: translateY(${sheetTranslate}px);" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">
+      <div class="absolute inset-0 bg-black/70 backdrop-blur-md sheet-backdrop" ref="logoutBackdrop" @click="showLogoutModal = false"></div>
+      <div class="relative w-full max-w-md glass-strong rounded-t-3xl max-h-[50vh] overflow-y-auto slide-up pb-10 sheet-content" ref="logoutSheet" style="box-shadow: 0 -10px 40px rgba(0,0,0,0.5);" @touchstart="onTouchStart" @touchmove="onTouchMove" @touchend="onTouchEnd">
         <div class="sticky top-0 z-10 glass-strong rounded-t-3xl pb-3 pt-3 px-5 mb-4" style="background: linear-gradient(to bottom, rgba(10,15,20,0.98) 60%, rgba(10,15,20,0.8) 80%, transparent 100%);">
-          <div class="w-12 h-1.5 bg-[#B2D5E5]/30 rounded-full mx-auto mb-3 cursor-grab"></div>
+          <div class="w-12 h-1.5 rounded-full mx-auto mb-3 cursor-grab" :style="`background-color: ${currentAccent}4D;`"></div>
           <p class="text-center text-[9px] uppercase tracking-widest text-white/30 mb-3">Geser ke bawah untuk menutup</p>
         </div>
         <div class="px-5 space-y-5">
@@ -698,6 +684,11 @@
       const loginForm = ref({ username: '', password: '' });
       
       const activeTab = ref(0);
+      
+      // Dynamic Accent Colors per Tab
+      const accentColors = ['#B2D5E5', '#A7E5B2', '#E5D5B2', '#E5B2C4', '#D5B2E5']; // T1, T2, T3, Result, Profile
+      const currentAccent = computed(() => accentColors[activeTab.value] || '#B2D5E5');
+      
       const search1 = ref(''); const search2 = ref(''); const search3 = ref(''); const searchResult = ref('');
       const showActivityModal = ref(false);
       const showResultModal = ref(false);
@@ -712,7 +703,7 @@
         { name: 'TRANS 1', icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />' },
         { name: 'TRANS 2', icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />' },
         { name: 'TRANS 3', icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M9.75 3.104v5.714a2.25 2.25 0 01-.659 1.591L5 14.5M14.25 3.104v5.714c0 .597.237 1.17.659 1.591L19.8 15.3M9.75 3.104c.251.023.501.05.75.082m4.5-.082c-.251.023-.501.05-.75.082M19.8 15.3l-1.57.393A9.065 9.065 0 0112 15a9.065 9.065 0 00-6.23-.693L5 14.5m14.8.8l1.402 1.402c1.232 1.232.65 3.318-1.067 3.611A48.309 48.309 0 0112 21c-2.773 0-5.491-.235-8.135-.687-1.718-.293-2.3-2.379-1.067-3.61L5 14.5" />' },
-        { name: 'RESULT', icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />' },
+        { name: 'RESULT', icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125, 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 013 19.875v-6.75zM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V8.625zM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 01-1.125-1.125V4.125z" />' },
         { name: 'PROFILE', icon: '<path stroke-linecap="round" stroke-linejoin="round" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z" />' }
       ];
 
@@ -759,36 +750,63 @@
       const pertumbuhanOptions = ['Tumbuh Baik', 'Tumbuh Kurang Baik', 'Tidak Tumbuh', 'Abnormal']; const jumlahOptions = ['Sedikit', 'Banyak'];
       const formData = ref({});
 
-      // Swipe to dismiss logic
-      const touchStartY = ref(0); 
-      const sheetTranslate = ref(0);
-      const backdropOpacity = ref(1);
+      // DOM Refs for smooth swipe (no Vue reactivity lag)
+      const formSheet = ref(null); const formBackdrop = ref(null);
+      const resultSheet = ref(null); const resultBackdrop = ref(null);
+      const activitySheet = ref(null); const activityBackdrop = ref(null);
+      const logoutSheet = ref(null); const logoutBackdrop = ref(null);
+      
+      const touchStartY = ref(0);
+      let currentSheet = null; let currentBackdrop = null;
 
       const onTouchStart = (e) => {
         touchStartY.value = e.touches[0].clientY;
-        sheetTranslate.value = 0; // Reset translate for smooth start
-        backdropOpacity.value = 1;
+        
+        // Determine which sheet is active to manipulate directly
+        if (showForm.value) { currentSheet = formSheet.value; currentBackdrop = formBackdrop.value; }
+        else if (showResultModal.value) { currentSheet = resultSheet.value; currentBackdrop = resultBackdrop.value; }
+        else if (showActivityModal.value) { currentSheet = activitySheet.value; currentBackdrop = activityBackdrop.value; }
+        else if (showLogoutModal.value) { currentSheet = logoutSheet.value; currentBackdrop = logoutBackdrop.value; }
+
+        if (currentSheet) {
+          currentSheet.style.transition = 'none'; // Disable transition during drag
+          currentBackdrop.style.transition = 'none';
+        }
       };
       
       const onTouchMove = (e) => {
+        if (!currentSheet) return;
         let diff = e.touches[0].clientY - touchStartY.value;
         if (diff > 0) {
-          sheetTranslate.value = diff;
-          backdropOpacity.value = 1 - (diff / 500); // Fade out backdrop based on distance
+          currentSheet.style.transform = `translateY(${diff}px)`;
+          currentBackdrop.style.opacity = 1 - (diff / 500);
         }
       };
       
       const onTouchEnd = () => {
-        if (sheetTranslate.value > 100) {
-          // Close modal if dragged far enough
+        if (!currentSheet) return;
+        
+        currentSheet.style.transition = 'transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease'; // Re-enable transition
+        currentBackdrop.style.transition = 'opacity 0.3s ease';
+        
+        let currentTranslate = 0;
+        if (currentSheet.style.transform) {
+            currentTranslate = parseInt(currentSheet.style.transform.match(/-?\d+/)[0]);
+        }
+
+        if (currentTranslate > 100) {
           if (showForm.value) closeForm();
           if (showActivityModal.value) showActivityModal.value = false;
           if (showResultModal.value) showResultModal.value = false;
           if (showLogoutModal.value) showLogoutModal.value = false;
+        } else {
+          // Bounce back
+          currentSheet.style.transform = 'translateY(0)';
+          currentBackdrop.style.opacity = 1;
         }
-        // Reset position with animation (CSS transition handles this)
-        sheetTranslate.value = 0;
-        backdropOpacity.value = 1;
+        
+        currentSheet = null;
+        currentBackdrop = null;
       };
 
       const fetchAPI = async (action, method = 'GET', payload = null) => {
@@ -841,7 +859,7 @@
       const handleFoto = (e) => {
         const file = e.target.files[0];
         if (file) {
-          fotoPreview.value = URL.createObjectURL(file); // Show original for preview
+          fotoPreview.value = URL.createObjectURL(file); 
           formErrors.value.foto = false;
         }
       };
@@ -857,7 +875,6 @@
         return text;
       });
 
-      // Image Compression Function
       const compressImage = (file, maxWidth = 800, quality = 0.7) => {
         return new Promise((resolve, reject) => {
           const reader = new FileReader();
@@ -904,7 +921,6 @@
         if (activeTab.value === 0 || activeTab.value === 1) {
           if (!formData.value.pertumbuhan) { formErrors.value.pertumbuhan = true; isValid = false; }
           if (!formData.value.jumlah) { formErrors.value.jumlah = true; isValid = false; }
-          if (formData.value.presentase === 0) { formErrors.value.presentase = true; isValid = false; }
         } else if (activeTab.value === 2) {
           if (!formData.value.warnaDaun) { formErrors.value.warnaDaun = true; isValid = false; }
           if (!formData.value.jmlBotol || formData.value.jmlBotol === 0) { formErrors.value.jmlBotol = true; isValid = false; }
@@ -927,7 +943,7 @@
         if (activeTab.value < 2) {
           payload.tglMonitoring = new Date().toLocaleDateString('id-ID');
           payload.planlet = formData.value.jumlah;
-          payload.persentase = formData.value.presentase;
+          payload.persentase = formData.value.presentase + '%'; // Format as "30%" or "0%"
         } else {
           payload.tgl = new Date().toLocaleDateString('id-ID');
           payload.jumlahBotol = formData.value.jmlBotol;
@@ -949,7 +965,6 @@
           try {
             const file = fileInput.value.files[0];
             if (file) {
-              // COMPRESS IMAGE BEFORE SENDING
               const imgData = await compressImage(file, 800, 0.7);
               payload.fileData = imgData.fileData;
               payload.mimeType = imgData.mimeType;
@@ -974,7 +989,7 @@
 
       return {
         isLoggedIn, isLoggingIn, loginForm, handleLogin, confirmLogout,
-        activeTab, tabs, visibleTabs, currentView,
+        activeTab, tabs, visibleTabs, currentView, currentAccent,
         trans1, trans2, trans3, resultData,
         filteredTrans1, filteredTrans2, filteredTrans3, filteredResult,
         paginatedTrans1, paginatedTrans2, paginatedTrans3, paginatedResult,
@@ -990,7 +1005,9 @@
         showResultModal, resultDetailData, openResultDetail,
         showLogoutModal,
         autoKeterangan,
-        touchStartY, sheetTranslate, backdropOpacity, onTouchStart, onTouchMove, onTouchEnd
+        // DOM Refs
+        formSheet, formBackdrop, resultSheet, resultBackdrop, activitySheet, activityBackdrop, logoutSheet, logoutBackdrop,
+        onTouchStart, onTouchMove, onTouchEnd
       };
     }
   });
